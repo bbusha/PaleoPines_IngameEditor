@@ -1,0 +1,10 @@
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.csproj.AssemblyReference.cache
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.AssemblyInfoInputs.cache
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.AssemblyInfo.cs
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.csproj.CoreCompileInputs.cache
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\bin\PaleoPinesDinoStudio.deps.json
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\bin\PaleoPinesDinoStudio.dll
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\PaleoPinesDinoStudio.dll
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\refint\PaleoPinesDinoStudio.dll
+C:\Users\chris\OneDrive\Desktop\Projects\PaleoPinesDinoStudio\obj\Release\ref\PaleoPinesDinoStudio.dll
