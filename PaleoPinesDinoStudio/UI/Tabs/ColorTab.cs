@@ -15,17 +15,18 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static readonly Entry[] Entries =
         {
-            new Entry { Name = "Base Colour",       Get = w => w.BaseColor,     Set = (w, c) => w.BaseColor = c },
-            new Entry { Name = "Pattern Colour 1",  Get = w => w.PatternColor1, Set = (w, c) => w.PatternColor1 = c },
-            new Entry { Name = "Pattern Colour 2",  Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
-            new Entry { Name = "Pattern Colour 3",  Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
-            new Entry { Name = "Pattern Colour 4",  Get = w => w.PatternColor4, Set = (w, c) => w.PatternColor4 = c },
+            new Entry { Name = colorRegions[0] + " (Base)",       Get = w => w.BaseColor,     Set = (w, c) => w.BaseColor = c },
+            new Entry { Name = colorRegions[1],  Get = w => w.PatternColor1, Set = (w, c) => w.PatternColor1 = c },
+            new Entry { Name = colorRegions[2],  Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
+            new Entry { Name = colorRegions[3],  Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
+            new Entry { Name = colorRegions[4],  Get = w => w.PatternColor4, Set = (w, c) => w.PatternColor4 = c },
             new Entry { Name = "Journal Display",   Get = w => w.JournalColor,  Set = (w, c) => w.JournalColor = c },
         };
 
         private static RawImage[] _swatches;
         private static bool _builtWithContent;
         private static Texture2D _whiteTex;
+        private static String[] colorRegions;
 
         private static Texture2D WhiteTex()
         {
@@ -58,6 +59,9 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     0f, 50f, 900f, 40f, 24f, UiPalette.Warn, UiPalette.LeftMid);
                 return;
             }
+
+            // Get the names of the regions that can be colored for this species
+            GetRegionColorNames(w.PatternUid);
 
             for (int i = 0; i < Entries.Length; i++)
             {
@@ -159,6 +163,22 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             if (w == null) return;
             var c = Entries[idx].Get(w);
             _swatches[idx].color = new Color(c.r, c.g, c.b, 1f);
+        }
+
+        private static void GetRegionColorNames(String w)
+        {
+            // Which dino is it?
+            switch (w.toLowerCase())
+            {
+                case "allosaurus":
+                    colorRegions = new String[] { "Belly", "Body", "Nose/Claws", 
+                    "Stripes", "Small Details" };
+                    break;
+                default:
+                    colorRegions = new String[] { "Base Colour", "Pattern Colour 1", "Pattern Colour 2", 
+                    "Pattern Colour 3", "Pattern Colour 4" };
+                    break;
+            }
         }
     }
 }
