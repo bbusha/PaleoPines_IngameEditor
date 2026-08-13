@@ -372,7 +372,7 @@ namespace PaleoPinesDinoStudio.UI
                 if (s.Knob != null) s.Knob.rectTransform.anchoredPosition = new Vector2(Mathf.Clamp(v * s.r.width - 7f, 0f, s.r.width - 14f), 4f);
                 if (s.ValueLabel != null && s.Get != null)
                 {
-                    s.ValueLabel.text = string.Format(s.Format ?? "{0:0.00}", s.Get());
+                    s.ValueLabel.text = string.Format(s.Format ?? "{0:0.00}", s.DisplayValue);
                 }
             }
 

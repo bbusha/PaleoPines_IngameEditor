@@ -142,5 +142,54 @@ namespace PaleoPinesDinoStudio.Core
             }
             return result;
         }
+
+        // ---- Cached pawn scanning ----
+        // DinoTab and ApplyTab poll the scene for dinos every frame/0.5s. FindObjectsOfType
+        // allocates heavily, so we scan at most every 0.75s and reuse the result.
+
+        private static readonly System.Collections.Generic.List<Il2CppItalicPig.PaleoPines.Actors.DinoPawn> _pawnCache =
+            new System.Collections.Generic.List<Il2CppItalicPig.PaleoPines.Actors.DinoPawn>();
+        private static float _lastPawnScan = -1f;
+
+        public static System.Collections.Generic.List<Il2CppItalicPig.PaleoPines.Actors.DinoPawn> PawnCache()
+        {
+            float now = UnityEngine.Time.unscaledTime;
+            if (now - _lastPawnScan < 0.75f) return _pawnCache;
+
+            _lastPawnScan = now;
+            _pawnCache.Clear();
+            try
+            {
+                var pawns = UnityEngine.Object.FindObjectsOfType<Il2CppItalicPig.PaleoPines.Actors.DinoPawn>(true);
+                for (int i = 0; i < pawns.Length; i++)
+                {
+                    var p = pawns[i];
+                    if (p != null) _pawnCache.Add(p);
+                }
+            }
+            catch (System.Exception e)
+            {
+                MelonLoader.MelonLogger.Error("PawnCache scan failed: " + e);
+            }
+            return _pawnCache;
+        }
+
+        public static System.Collections.Generic.List<Il2CppItalicPig.PaleoPines.Actors.DinoPawn> FindPawnsOfSpeciesCached(string speciesId)
+        {
+            var cache = PawnCache();
+            if (string.IsNullOrEmpty(speciesId)) return cache;
+            var result = new System.Collections.Generic.List<Il2CppItalicPig.PaleoPines.Actors.DinoPawn>();
+            for (int i = 0; i < cache.Count; i++)
+            {
+                var p = cache[i];
+                if (p != null && p.DefaultSpeciesID == speciesId) result.Add(p);
+            }
+            return result;
+        }
+
+        public static int PawnCount()
+        {
+            return PawnCache().Count;
+        }
     }
 }

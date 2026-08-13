@@ -11,11 +11,15 @@ namespace PaleoPinesDinoStudio.Core
             if (herd == null) return false;
             var setups = herd.DinoSetups;
             if (setups == null) return false;
+            string uid = color != null ? color._StringUID : null;
             for (int i = 0; i < setups.Count; i++)
             {
                 var s = setups[i];
                 if (s == null) continue;
                 if (s.Pattern == pattern && s.Color == color) return true;
+                // Scene reloads create fresh herd objects, so also dedup by colour UID -
+                // this keeps re-injection from piling up duplicate variants.
+                if (!string.IsNullOrEmpty(uid) && s.Color != null && s.Color._StringUID == uid) return true;
             }
             return false;
         }
@@ -35,7 +39,7 @@ namespace PaleoPinesDinoStudio.Core
             return true;
         }
 
-        public static bool InjectIntoHerd(WorkingAssets w)
+        public static bool InjectIntoHerd(WorkingAssets w, bool refresh = true)
         {
             if (w == null || w.WorkingPattern == null || w.WorkingColor == null) return false;
             var herd = GameCatalog.FindHerd(w.SpeciesId);
@@ -47,7 +51,7 @@ namespace PaleoPinesDinoStudio.Core
 
             var setup = AssetFactory.CreateSetup(prefab, w.WorkingPattern, w.WorkingColor, w.Rarity);
             bool ok = AddSetupToHerd(herd, setup);
-            if (ok)
+            if (ok && refresh)
             {
                 GameCatalog.Refresh();
             }
@@ -65,7 +69,7 @@ namespace PaleoPinesDinoStudio.Core
                 if (p == null) continue;
                 if (!string.IsNullOrEmpty(w.SpeciesId) && p.DefaultSpeciesID != w.SpeciesId) continue;
                 if (!IsTamed(p)) continue;
-                if (RecolorPawn(p, w.WorkingPattern, w.WorkingColor)) n++;
+                if (RecolorPawn(p, w.WorkingPattern, w.WorkingColor, w.EyeColor)) n++;
             }
             return n;
         }
@@ -144,12 +148,12 @@ namespace PaleoPinesDinoStudio.Core
             return "";
         }
 
-        public static bool RecolorPawn(DinoPawn pawn, DinoPattern pattern, DinoColor color)
+        public static bool RecolorPawn(DinoPawn pawn, DinoPattern pattern, DinoColor color, Color? eyeColor = null)
         {
             if (pawn == null) return false;
             try
             {
-                ColourApplier.Apply(pawn, pattern, color);
+                ColourApplier.Apply(pawn, pattern, color, setColourData: true, eyeColor: eyeColor);
                 return true;
             }
             catch (System.Exception e)

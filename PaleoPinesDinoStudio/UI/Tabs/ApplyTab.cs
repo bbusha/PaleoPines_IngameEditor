@@ -14,9 +14,12 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static UiButton _applyBtn;
         private static UiScroll _pawnScroll;
+        private static UiScroll _designScroll;
+        private static UiButton _saveBtn;
         private static bool _builtWithContent;
         private static float _lastPawnRefresh;
         private static int _lastPawnCount = -1;
+        private static int _lastDesignCount = -1;
 
         public static void Build(StudioState state, RectTransform parent)
         {
@@ -52,7 +55,6 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             // Apply
             _applyBtn = UiFactory.Button(parent, "ApplyBtn", "Apply", 0f, 300f, 200f, 42f, () => Apply(state, w));
             _applyBtn.Disabled = !has;
-
             if (!has)
             {
                 UiFactory.Label(parent, "NoContent", "Pick a species + setup in the Catalog tab first.",
@@ -70,6 +72,16 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     0f, 444f, 760f, 60f, 16f, UiPalette.Warn, UiPalette.LeftMid);
             }
 
+            // Design library (saved variants that persist to disk and re-inject on world load)
+            _saveBtn = UiFactory.Button(parent, "SaveBtn", "Save design to library", 0f, 516f, 230f, 30f,
+                () => SaveDesign(state, w));
+            _saveBtn.Disabled = !has;
+            UiFactory.Label(parent, "DesignsTitle", "My designs (re-injected on world load):", 0f, 552f, 700f, 22f, 18f, UiPalette.Text, UiPalette.LeftMid);
+            _designScroll = UiFactory.Scroll(parent, "DesignList", 0f, 578f, 700f, 156f);
+            _lastDesignCount = -1;
+            Core.DesignStore.Load();
+            RebuildDesigns();
+
             // Pawn list
             UiFactory.Label(parent, "PawnTitle", "Tamed dinos in scene of this species:", 720f, 0f, 700f, 26f, 20f, UiPalette.Text, UiPalette.LeftMid);
             _pawnScroll = UiFactory.Scroll(parent, "PawnList", 720f, 30f, 796f, 650f);
@@ -86,14 +98,20 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 return;
             }
 
-            if (!has) return;
-
             if (_applyBtn != null) _applyBtn.Disabled = !has;
+            if (_saveBtn != null) _saveBtn.Disabled = !has;
+
+            if (Core.DesignStore.Designs.Count != _lastDesignCount)
+            {
+                RebuildDesigns();
+            }
+
+            if (!has) return;
 
             if (_pawnScroll != null && Time.unscaledTime - _lastPawnRefresh > 0.5f)
             {
                 _lastPawnRefresh = Time.unscaledTime;
-                var pawns = Core.GameCatalog.FindPawnsOfSpecies(w.SpeciesId);
+                var pawns = Core.GameCatalog.FindPawnsOfSpeciesCached(w.SpeciesId);
                 if (pawns.Count != _lastPawnCount)
                 {
                     RebuildPawnList(pawns);
@@ -160,6 +178,91 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             else
             {
                 state.SetStatus("Nothing to apply - check toggles, or no wild spawns / tamed dinos matched.");
+            }
+        }
+
+        // ---- Design library ----
+
+        private static void SaveDesign(StudioState state, Core.WorkingAssets w)
+        {
+            if (w == null || !w.HasContent)
+            {
+                state.SetStatus("Nothing to save - pick a species + setup first.");
+                return;
+            }
+            string name = string.IsNullOrEmpty(_customName) ? ("My " + w.SpeciesId) : _customName.Trim();
+            w.SetupDisplayName = name;
+            w.Rarity = (DinoRarity)_rarityIndex;
+            var d = Core.DesignStore.SaveCurrent(w);
+            RebuildDesigns();
+            state.SetStatus(d != null
+                ? "Saved \"" + d.displayName + "\" to your library."
+                : "Could not save design.");
+        }
+
+        private static void LoadDesign(StudioState state, Core.SavedDesign d)
+        {
+            if (state == null || d == null) return;
+            var w = Core.DesignStore.Restore(d);
+            if (w == null)
+            {
+                state.SetStatus("Could not restore that design (is the world loaded?).");
+                return;
+            }
+            state.Working = w;
+            state.LivePawn = null;
+            state.SetStatus("Loaded \"" + d.displayName + "\" - editing it now.");
+            GameUI.SwitchTab(2); // jump straight to the colour editor
+        }
+
+        private static void RemoveDesign(StudioState state, Core.SavedDesign d)
+        {
+            if (state == null || d == null) return;
+            if (Core.DesignStore.Remove(d.colorUid))
+            {
+                RebuildDesigns();
+                state.SetStatus("Removed \"" + d.displayName + "\" from your library.");
+            }
+        }
+
+        private static void RebuildDesigns()
+        {
+            if (_designScroll == null) return;
+            _lastDesignCount = Core.DesignStore.Designs.Count;
+            GameUI.RemoveScrollButtons(_designScroll);
+            UiFactory.ClearChildren(_designScroll.Content);
+            _designScroll.ContentHeight = 0f;
+            _designScroll.Scroll = 0f;
+
+            if (Core.DesignStore.Designs.Count == 0)
+            {
+                UiFactory.Label(_designScroll.Content, "DesignsEmpty",
+                    "No saved designs yet. Edit colours, then hit 'Save design to library'.",
+                    0f, 0f, _designScroll.view.width, 40f, 16f, UiPalette.Dim, UiPalette.LeftMid);
+                return;
+            }
+
+            for (int i = 0; i < Core.DesignStore.Designs.Count; i++)
+            {
+                var d = Core.DesignStore.Designs[i];
+                if (d == null) continue;
+                int row = i;
+                float rowY = row * 40f;
+
+                var rt = UiFactory.ScrollItem(_designScroll, "Design_" + row, rowY, 696f, 38f);
+                string rarity = ((DinoRarity)d.rarity).ToString();
+                string text = d.displayName + "  (" + d.speciesId + ")  [" + rarity + "]\n" + d.created;
+                UiFactory.Label(rt, "Design_" + row + "_Label", text, 4f, 0f, 400f, 38f, 15f, UiPalette.Text, UiPalette.LeftMid);
+
+                var load = UiFactory.Button(_designScroll.Content, "Design_" + row + "_Load", "Load", 420f, rowY + 4f, 90f, 30f,
+                    () => LoadDesign(Main.State, d));
+                load.InScroll = _designScroll;
+                load.Label.fontSize = 17f;
+
+                var rm = UiFactory.Button(_designScroll.Content, "Design_" + row + "_Remove", "Remove", 514f, rowY + 4f, 110f, 30f,
+                    () => RemoveDesign(Main.State, d));
+                rm.InScroll = _designScroll;
+                rm.Label.fontSize = 17f;
             }
         }
     }

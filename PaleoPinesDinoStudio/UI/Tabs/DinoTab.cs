@@ -16,6 +16,8 @@ namespace PaleoPinesDinoStudio.UI.Tabs
         private static TextMeshProUGUI _info;
         private static int _lastCount = -1;
         private static bool _rebuilding;
+        private static string _filter = "";
+        private static string _lastFilter = "";
         private static System.Collections.Generic.List<DinoPawn> _pawns = new System.Collections.Generic.List<DinoPawn>();
 
         public static void Build(StudioState state, RectTransform parent)
@@ -26,14 +28,19 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 "Its colours are copied in; from then on your changes update it in real time.",
                 0f, 28f, 900f, 44f, 16f, UiPalette.Dim, UiPalette.LeftMid);
 
-            _info = UiFactory.Label(parent, "DinoInfo", "", 0f, 78f, 1200f, 22f, 18f, UiPalette.Warn, UiPalette.LeftMid);
+            UiFactory.Label(parent, "DinoFilterLabel", "Filter:", 0f, 76f, 80f, 26f, 18f, UiPalette.Text, UiPalette.LeftMid);
+            UiFactory.TextField(parent, "DinoFilter", 84f, 76f, 420f, 28f,
+                () => _filter, v => _filter = v);
 
-            var clear = UiFactory.Button(parent, "ClearLive", "Stop editing (clear)", 0f, 104f, 220f, 30f,
+            _info = UiFactory.Label(parent, "DinoInfo", "", 0f, 110f, 1200f, 22f, 18f, UiPalette.Warn, UiPalette.LeftMid);
+
+            var clear = UiFactory.Button(parent, "ClearLive", "Stop editing (clear)", 0f, 136f, 220f, 30f,
                 () => ClearLive(Main.State));
 
-            _scroll = UiFactory.Scroll(parent, "DinoList", 0f, 142f, 1200f, 620f);
+            _scroll = UiFactory.Scroll(parent, "DinoList", 0f, 174f, 1200f, 560f);
 
             _lastCount = -1;
+            _lastFilter = "";
             Rebuild(state);
             UpdateInfo(state);
         }
@@ -48,23 +55,21 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         public static void Tick(StudioState state)
         {
-            int count = CountPawns();
+            int count = Core.GameCatalog.PawnCount();
             if (count != _lastCount && !_rebuilding)
             {
                 _rebuilding = true;
                 Rebuild(state);
                 _rebuilding = false;
             }
-            UpdateInfo(state);
-        }
-
-        private static int CountPawns()
-        {
-            try
+            else if (_filter != _lastFilter && !_rebuilding)
             {
-                return Core.GameCatalog.FindPawnsOfSpecies("").Count;
+                _rebuilding = true;
+                _lastFilter = _filter;
+                Rebuild(state);
+                _rebuilding = false;
             }
-            catch { return 0; }
+            UpdateInfo(state);
         }
 
         private static void UpdateInfo(StudioState state)
@@ -85,8 +90,22 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static void Rebuild(StudioState state)
         {
-            _pawns = Core.GameCatalog.FindPawnsOfSpecies("");
-            _lastCount = _pawns.Count;
+            var all = Core.GameCatalog.PawnCache();
+            _pawns.Clear();
+            string f = _filter != null ? _filter.Trim().ToLowerInvariant() : "";
+            for (int i = 0; i < all.Count; i++)
+            {
+                var p = all[i];
+                if (p == null) continue;
+                if (f.Length > 0)
+                {
+                    string name = Core.Injector.DinoDisplayName(p);
+                    string hay = name + " " + p.DefaultSpeciesID;
+                    if (hay.IndexOf(f, System.StringComparison.OrdinalIgnoreCase) < 0) continue;
+                }
+                _pawns.Add(p);
+            }
+            _lastCount = all.Count;
 
             if (_scroll == null) return;
             GameUI.RemoveScrollButtons(_scroll);

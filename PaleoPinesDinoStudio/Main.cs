@@ -47,6 +47,12 @@ namespace PaleoPinesDinoStudio
         {
             if (State == null) return;
             State.OnSceneChanged(sceneName);
+
+            // Re-catalog the world's herds and re-inject any saved designs so custom
+            // variants survive scene changes / world reloads.
+            Core.DesignStore.Load();
+            Core.GameCatalog.Refresh();
+            Core.DesignStore.ReinjectAll();
         }
 
         public override void OnSceneWasUnloaded(int buildIndex, string sceneName)

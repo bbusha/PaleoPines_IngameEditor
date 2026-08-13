@@ -65,6 +65,7 @@ namespace PaleoPinesDinoStudio.UI
         public Rect r;
         public Func<Vector2> Origin;
         public Func<float> Get;
+        public Func<float> DisplayGet; // optional: value shown in the label (defaults to Get)
         public Action<float> Set;
         public Image Fill;
         public Image Knob;
@@ -73,6 +74,8 @@ namespace PaleoPinesDinoStudio.UI
         public bool Dragging;
 
         public float Value { get { return Get != null ? Mathf.Clamp01(Get()) : 0f; } }
+
+        public float DisplayValue { get { return DisplayGet != null ? DisplayGet() : Value; } }
 
         public Rect EffRect()
         {
