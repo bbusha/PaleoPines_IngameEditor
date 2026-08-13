@@ -16,10 +16,10 @@ namespace PaleoPinesDinoStudio.UI.Tabs
         private static readonly Entry[] Entries =
         {
             new Entry { Name = SetColorRegions(0) + " (Base)",       Get = w => w.BaseColor,     Set = (w, c) => w.BaseColor = c },
-            new Entry { Name = "Pattern Colour 1",  Get = w => w.PatternColor1, Set = (w, c) => w.PatternColor1 = c },
-            new Entry { Name = "Pattern Colour 2",  Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
-            new Entry { Name = "Pattern Colour 3",  Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
-            new Entry { Name = "Pattern Colour 4",  Get = w => w.PatternColor4, Set = (w, c) => w.PatternColor4 = c },
+            new Entry { Name = SetColorRegions(1),  Get = w => w.PatternColor1, Set = (w, c) => w.PatternColor1 = c },
+            new Entry { Name = SetColorRegions(2),  Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
+            new Entry { Name = SetColorRegions(3),  Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
+            new Entry { Name = SetColorRegions(4),  Get = w => w.PatternColor4, Set = (w, c) => w.PatternColor4 = c },
             new Entry { Name = "Journal Display",   Get = w => w.JournalColor,  Set = (w, c) => w.JournalColor = c },
         };
 
@@ -173,15 +173,23 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     switch (idx)
                     {
                         case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Nose/Claws";
+                        case 3: return "Stripes";
+                        case 4: return "Details";
+                        default: return "Unknown";
+                    }
+                default:
+                    MelonLoader.MelonLogger.Msg("Setting color regions for default species");
+                    switch (idx)
+                    {
+                        case 0: return "Base";
                         case 1: return "Pattern Colour 1";
                         case 2: return "Pattern Colour 2";
                         case 3: return "Pattern Colour 3";
                         case 4: return "Pattern Colour 4";
                         default: return "Unknown";
                     }
-                default:
-                    MelonLoader.MelonLogger.Msg("Setting color regions for default species");
-                    return "Default";
             }
         }
     }
