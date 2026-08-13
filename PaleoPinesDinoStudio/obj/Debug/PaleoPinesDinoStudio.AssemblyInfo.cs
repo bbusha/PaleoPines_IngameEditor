@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0d732aa9adc6e4612eea01e1d402f78e8342483")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c8b213f740e5b9957e275c900ca2de02cffb44a8")]
 [assembly: System.Reflection.AssemblyProductAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
