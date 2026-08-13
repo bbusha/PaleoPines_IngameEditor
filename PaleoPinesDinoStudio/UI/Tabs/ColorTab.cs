@@ -15,7 +15,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static readonly Entry[] Entries =
         {
-            new Entry { Name = "Base Colour",       Get = w => w.BaseColor,     Set = (w, c) => w.BaseColor = c },
+            new Entry { Name = SetColorRegions(0) + " (Base)",       Get = w => w.BaseColor,     Set = (w, c) => w.BaseColor = c },
             new Entry { Name = "Pattern Colour 1",  Get = w => w.PatternColor1, Set = (w, c) => w.PatternColor1 = c },
             new Entry { Name = "Pattern Colour 2",  Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
             new Entry { Name = "Pattern Colour 3",  Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
@@ -26,6 +26,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
         private static RawImage[] _swatches;
         private static bool _builtWithContent;
         private static Texture2D _whiteTex;
+        
 
         private static Texture2D WhiteTex()
         {
@@ -159,6 +160,29 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             if (w == null) return;
             var c = Entries[idx].Get(w);
             _swatches[idx].color = new Color(c.r, c.g, c.b, 1f);
+        }
+
+        private static string SetColorRegions(int idx)
+        {
+            var w = Main.State.Working;
+
+            switch (w.SpeciesId)
+            {
+                case "ALLOS":
+                    MelonLoader.MelonLogger.Msg("Setting color regions for Allosaurus");
+                    switch (idx)
+                    {
+                        case 0: return "Belly";
+                        case 1: return "Pattern Colour 1";
+                        case 2: return "Pattern Colour 2";
+                        case 3: return "Pattern Colour 3";
+                        case 4: return "Pattern Colour 4";
+                        default: return "Unknown";
+                    }
+                default:
+                    MelonLoader.MelonLogger.Msg("Setting color regions for default species");
+                    return "Default";
+            }
         }
     }
 }
