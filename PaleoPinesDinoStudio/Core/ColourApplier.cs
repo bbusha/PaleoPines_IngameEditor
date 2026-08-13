@@ -231,8 +231,17 @@ namespace PaleoPinesDinoStudio.Core
                 if (GameCatalog.SetupsBySpecies.TryGetValue(speciesId, out var list)) setups = list;
 
                 // Read the pawn's current rendered look from its body material.
+                // The game's colour variants are written to per-renderer material
+                // instances (renderer.material); sharedMaterial is the untouched
+                // base-skin asset, which is exactly what was making selected dinos
+                // snap back to their base colours.
                 Renderer r0 = pawn.bodyRenderers != null && pawn.bodyRenderers.Count > 0 ? pawn.bodyRenderers[0] : null;
-                Material m = r0 != null ? r0.sharedMaterial : null;
+                Material m = null;
+                if (r0 != null)
+                {
+                    try { m = r0.material; } catch { }
+                    if (m == null) { try { m = r0.sharedMaterial; } catch { } }
+                }
 
                 Color baseCol = Color.white, p1 = Color.black, p2 = Color.black, p3 = Color.black, p4 = Color.black, journal = Color.gray;
                 // Base tint lives in _Color on the game's Dino shader (aliased _BaseColor elsewhere).
@@ -286,7 +295,10 @@ namespace PaleoPinesDinoStudio.Core
 
                 string uid = "?";
                 try { uid = pawn.Uid; } catch { }
-                state.SetStatus("Loaded " + speciesId + " (uid " + uid + ") as base - colours now update live.");
+                string who = speciesId;
+                string dn = Injector.DinoDisplayName(pawn);
+                if (!string.IsNullOrEmpty(dn)) who = dn + " (" + speciesId + ")";
+                state.SetStatus("Loaded " + who + " (uid " + uid + ") as base - colours now update live.");
                 return true;
             }
             catch (System.Exception e)

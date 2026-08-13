@@ -113,6 +113,37 @@ namespace PaleoPinesDinoStudio.Core
             }
         }
 
+        /// <summary>
+        /// The dino's actual name: the player-given name or the one the game generated.
+        /// Returns "" for dinos without one (e.g. untamed), so callers can fall back to
+        /// the species id. Tamed dinos carry the name on DinoStats (and its SaveData).
+        /// </summary>
+        public static string DinoDisplayName(DinoPawn pawn)
+        {
+            if (pawn == null) return "";
+            try
+            {
+                var stats = pawn.DinoStats;
+                if (stats != null)
+                {
+                    string n = stats.DinoName;
+                    if (!string.IsNullOrEmpty(n)) return n;
+                    try
+                    {
+                        var sd = stats.SaveData;
+                        if (sd != null)
+                        {
+                            string n2 = sd.Name;
+                            if (!string.IsNullOrEmpty(n2)) return n2;
+                        }
+                    }
+                    catch { }
+                }
+            }
+            catch { }
+            return "";
+        }
+
         public static bool RecolorPawn(DinoPawn pawn, DinoPattern pattern, DinoColor color)
         {
             if (pawn == null) return false;

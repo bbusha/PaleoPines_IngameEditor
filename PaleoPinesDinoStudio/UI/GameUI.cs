@@ -187,6 +187,7 @@ namespace PaleoPinesDinoStudio.UI
         {
             if (state == null || !state.EditorOpen) return;
             EnsureBuilt();
+            UiFactory.UpdateBlocker();
 
             Vector2 mp = UiFactory.DesignPoint(Input.mousePosition);
             bool mdL = Input.GetMouseButtonDown(0);

@@ -121,7 +121,10 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 var pawn = pawns[i];
                 if (pawn == null) continue;
                 bool tamed = Core.Injector.IsTamed(pawn);
-                string text = "DinoPawn uid=" + pawn.Uid + "   [" + (tamed ? "tamed" : "wild") + "]";
+                string name = Core.Injector.DinoDisplayName(pawn);
+                string text = !string.IsNullOrEmpty(name)
+                    ? name + "   uid=" + pawn.Uid + "   [" + (tamed ? "tamed" : "wild") + "]"
+                    : "DinoPawn uid=" + pawn.Uid + "   [" + (tamed ? "tamed" : "wild") + "]";
                 var rt = UiFactory.ScrollItem(_pawnScroll, "Pawn_" + i, i * 30f, 400f, 28f);
                 UiFactory.Label(rt, "Pawn_" + i + "_Label", text, 4f, 0f, 780f, 28f, 17f, tamed ? UiPalette.Text : UiPalette.Dim, UiPalette.LeftMid);
             }

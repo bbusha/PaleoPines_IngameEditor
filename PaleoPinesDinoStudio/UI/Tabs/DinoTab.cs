@@ -75,7 +75,10 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             {
                 string uid = "";
                 try { uid = state.LivePawn.Uid; } catch { }
-                loaded = "Editing: " + state.Working.SpeciesId + " (uid " + uid + ") - changes apply live.";
+                string name = Core.Injector.DinoDisplayName(state.LivePawn);
+                loaded = !string.IsNullOrEmpty(name)
+                    ? "Editing: " + name + " (" + state.Working.SpeciesId + ", uid " + uid + ") - changes apply live."
+                    : "Editing: " + state.Working.SpeciesId + " (uid " + uid + ") - changes apply live.";
             }
             _info.text = loaded;
         }
@@ -106,7 +109,10 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 string uid = "";
                 try { uid = p.Uid; } catch { }
                 string tamed = Core.Injector.IsTamed(p) ? "tamed" : "wild";
-                string label = p.DefaultSpeciesID + "  [" + tamed + "]  " + uid;
+                string name = Core.Injector.DinoDisplayName(p);
+                string label = !string.IsNullOrEmpty(name)
+                    ? name + "  (" + p.DefaultSpeciesID + ")  [" + tamed + "]"
+                    : p.DefaultSpeciesID + "  [" + tamed + "]  " + uid;
 
                 int idx = i;
                 var b = UiFactory.ScrollButton(_scroll, "Dino_" + idx, label, i * 32f, 1196f, 30f,

@@ -164,6 +164,7 @@ namespace PaleoPinesDinoStudio.UI
 
         private static GameObject _canvasGO;
         private static RectTransform _rootRT;
+        private static Image _blocker;
         private static bool _fontTried;
         private static TMP_FontAsset _font;
         private static Material _fontMat;
@@ -179,7 +180,9 @@ namespace PaleoPinesDinoStudio.UI
             _canvasGO = new GameObject("DinoStudio_Canvas");
             var canvas = _canvasGO.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
+            // Well above the game's own canvases so the editor (and its blocker)
+            // always render on top and intercept clicks first.
+            canvas.sortingOrder = 10000;
             _canvasGO.AddComponent<GraphicRaycaster>();
 
             // Survive scene loads; otherwise the window dies with the world and GameUI
@@ -189,8 +192,8 @@ namespace PaleoPinesDinoStudio.UI
 
             // Full-screen invisible blocker: stops the game's EventSystem from routing
             // clicks to the game UI underneath the editor. Our input is manual.
-            var blocker = Panel(_canvasGO.transform, "Blocker", 0f, 0f, Screen.width, Screen.height, new Color(0f, 0f, 0f, 0f));
-            blocker.raycastTarget = true;
+            _blocker = Panel(_canvasGO.transform, "Blocker", 0f, 0f, Screen.width, Screen.height, new Color(0f, 0f, 0f, 0f));
+            _blocker.raycastTarget = true;
 
             Scale = Mathf.Min((float)Screen.width / DesignW, (float)Screen.height / DesignH);
 
@@ -209,6 +212,40 @@ namespace PaleoPinesDinoStudio.UI
         public static Vector2 DesignPoint(Vector2 screenPos)
         {
             return new Vector2(screenPos.x / Scale, (Screen.height - screenPos.y) / Scale);
+        }
+
+        /// <summary>
+        /// Keeps the invisible input blocker covering the whole screen and re-derives the
+        /// design scale when the window/resolution changes. Called every frame while the
+        /// editor is open so a resolution change can never leave an uncovered gap through
+        /// which the game would receive clicks/scroll.
+        /// </summary>
+        public static void UpdateBlocker()
+        {
+            if (_blocker == null) return;
+            try
+            {
+                float s = Mathf.Min((float)Screen.width / DesignW, (float)Screen.height / DesignH);
+                if (Mathf.Abs(s - Scale) > 0.001f)
+                {
+                    Scale = s;
+                    if (_rootRT != null)
+                    {
+                        _rootRT.sizeDelta = new Vector2(DesignW / Scale, DesignH / Scale);
+                        _rootRT.localScale = new Vector3(Scale, Scale, 1f);
+                    }
+                }
+
+                var rt = _blocker.rectTransform;
+                if (rt.sizeDelta.x != Screen.width || rt.sizeDelta.y != Screen.height)
+                {
+                    rt.sizeDelta = new Vector2(Screen.width, Screen.height);
+                }
+            }
+            catch (System.Exception e)
+            {
+                MelonLoader.MelonLogger.Error("UpdateBlocker failed: " + e);
+            }
         }
 
         public static bool InRect(Rect r, Vector2 p)

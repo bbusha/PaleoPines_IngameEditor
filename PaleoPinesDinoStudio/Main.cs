@@ -27,6 +27,12 @@ namespace PaleoPinesDinoStudio
 
             if (State.EditorOpen)
             {
+                // The game hides/locks the cursor when it receives mouse-wheel input
+                // (camera zoom, item cycling, etc). Force our editor state every frame
+                // so the cursor can't vanish while the overlay is up.
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
                 GameUI.Tick(State);
                 Core.ColourApplier.TickLive(State);
                 UI.Tabs.ViewportTab.Maintain(State);
