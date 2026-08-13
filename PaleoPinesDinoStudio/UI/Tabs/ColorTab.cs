@@ -60,9 +60,6 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 return;
             }
 
-            // Get the names of the regions that can be colored for this species
-            GetRegionColorNames(w.PatternUid);
-
             for (int i = 0; i < Entries.Length; i++)
             {
                 int idx = i;
