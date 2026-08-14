@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RoaBxpVEArg=",
+  "dgSpecHash": "5nOIQ+Q95zo=",
   "success": true,
-  "projectFilePath": "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
+  "projectFilePath": "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\graff\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.36\\microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
     "C:\\Users\\graff\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.36\\microsoft.windowsdesktop.app.ref.6.0.36.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {}
+    "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {}
   },
   "projects": {
-    "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {
+    "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
+        "projectUniqueName": "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
         "projectName": "PaleoPinesDinoStudio",
-        "projectPath": "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
+        "projectPath": "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj",
         "packagesPath": "C:\\Users\\graff\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\obj\\",
+        "outputPath": "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\graff\\AppData\\Roaming\\NuGet\\NuGet.Config",
