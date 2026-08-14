@@ -234,16 +234,36 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             _swatches[idx].color = new Color(c.r, c.g, c.b, 1f);
         }
 
+        // Returns the default color region name for a given index.
+        private static string ColorRegionDefault(int idx)
+        {
+            switch (idx)
+            {
+                case 0: return "Base";
+                case 1: return "Pattern Colour 1";
+                case 2: return "Pattern Colour 2";
+                case 3: return "Pattern Colour 3";
+                case 4: return "Pattern Colour 4";
+                case 5: return "Journal Display";
+                case 6: return "Eye Colour";
+                default: return "Unknown";
+            }
+        }
+
+        // Returns the color region name for a given index, taking into account species and pattern.
         private static string SetColorRegions(StudioState state, int idx)
         {
             var w = state != null ? state.Working : null;
             string speciesId = w != null ? w.SpeciesId : "";
+            string patternId = w != null ? w.PatternUid : "";
 
             switch (speciesId)
             {
                 case "ALLOS":
-                    switch (idx)
+                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
                     {
+                        switch (idx)
+                        {
                         case 0: return "Belly";
                         case 1: return "Body";
                         case 2: return "Nose/Claws";
@@ -252,19 +272,14 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 5: return "Journal Display";
                         case 6: return "Eye Colour";
                         default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
                     }
                 default:
-                    switch (idx)
-                    {
-                        case 0: return "Base";
-                        case 1: return "Pattern Colour 1";
-                        case 2: return "Pattern Colour 2";
-                        case 3: return "Pattern Colour 3";
-                        case 4: return "Pattern Colour 4";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
-                        default: return "Unknown";
-                    }
+                    return ColorRegionDefault(idx);
             }
         }
     }
