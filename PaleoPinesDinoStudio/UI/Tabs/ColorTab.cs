@@ -57,8 +57,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
             UiFactory.Label(parent, "ColorIntro",
                 "Colour Studio - drag sliders or type hex to change the dino colours.\n" +
-                "Base Colour paints the body; Pattern Colours 1-4 tint the markings (which keep the setup's own pattern); " +
-                "Eye Colour tints the eyes.",
+                "Any marking with a * indicates a region that is tinted, not fully changed.",
                 0f, 0f, 1300f, 46f, 19f, UiPalette.Text, UiPalette.LeftMid);
 
             UiFactory.Toggle(parent, "HsvToggle", _hsvMode ? "Basic (RGB)" : "Advanced (HSV)", 1180f, 0f, 240f, 30f,
@@ -83,7 +82,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 float y = 58f + i * 96f;
 
                 string displayName = SetColorRegions(state, idx);
-                if (idx == 0) displayName += " (Base)";
+                if (idx == Entries.Length - 1) displayName += "*";
                 UiFactory.Label(parent, "ColorName_" + idx, displayName, 0f, y, 210f, 30f, 21f, UiPalette.Text, UiPalette.LeftMid);
 
                 if (_hsvMode)
@@ -271,11 +270,12 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 case "ALLOS":
                     if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly";
                         case 1: return "Body";
-                        case 2: return "Nose/Claws";
+                        case 2: return "Claws/Nose";
                         case 3: return "Stripes";
                         case 4: return "Details";
                         case 5: return "Eye Colour";
@@ -284,11 +284,13 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "ANKYL":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor3;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -302,6 +304,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor3;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -315,17 +318,19 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "ARCHA":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor2;
                         switch (idx)
                         {
-                        case 0: return "Wings/Claws";
+                        case 0: return "Claws/Wings";
                         case 1: return "Belly";
                         case 2: return "Body";
-                        case 3: return "Nose/Feet";
+                        case 3: return "Feet/Nose";
                         case 4: return "Details";
                         case 5: return "Eye Colour";
                         default: return "Unknown";
@@ -333,44 +338,48 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor2;
                         switch (idx)
                         {
                         case 0: return "Claws";
-                        case 1: return "Belly/Neck/Wings/Tail";
-                        case 2: return "Head/Body/Tail Stripes";
+                        case 1: return "Belly/Neck/Tail/Wings";
+                        case 2: return "Body/Head/Tail Stripes";
                         case 3: return "Crest";
                         case 4: return "Details";
-                        case 5: return "Nose/Feet/Back Stripes";
+                        case 5: return "Back Stripes/Feet/Nose";
                         case 6: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "BARYO":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly/Claws";
                         case 1: return "Body";
                         case 2: return "Details";
                         case 3: return "Tail Circles";
-                        case 4: return "Eye Oval/Chin";
+                        case 4: return "Chin/Eye Oval";
                         case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly/Claws";
                         case 1: return "Body";
-                        case 2: return "Eye Stripe/Details";
-                        case 3: return "Stripes/Feet/Neck Gradient";
+                        case 2: return "Details/Eye Stripe";
+                        case 3: return "Feet/Neck Gradient/Stripes";
                         case 4: return "Nose";
                         case 5: return "Eye Colour";
                         default: return "Unknown";
@@ -378,11 +387,13 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "CARNO":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -396,6 +407,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -409,11 +421,13 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "CENTR":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -427,16 +441,18 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "CERAT":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly/Feet";
                         case 1: return "Body";
-                        case 2: return "Spots/Spines";
+                        case 2: return "Spines/Spots";
                         case 3: return "Nose Horn";
                         case 4: return "Claws/Details";
                         case 5: return "Eye Colour";
@@ -445,24 +461,27 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor2;
                         switch (idx)
                         {
                         case 0: return "Splotches";
                         case 1: return "Belly/Feet";
                         case 2: return "Body";
-                        case 3: return "Horns/Claws/Tail Stripes";
-                        case 4: return "Horn Tip/Leg Stripe";
+                        case 3: return "Claws/Horns/Tail Stripes";
+                        case 4: return "Leg Stripe/Horn Tip";
                         case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "COELO":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "Belly";
@@ -476,11 +495,27 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "COMPS":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
+                    if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor2;
+                        switch (idx)
+                        {
+                        case 0: return "UNUSED REGION";
+                        case 1: return "Belly";
+                        case 2: return "Back";
+                        case 3: return "Face/Feet";
+                        case 4: return "UNUSED REGION";
+                        case 5: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    if (patternId.Contains("Pattern 2"))
+                    {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
                         case 0: return "UNUSED REGION";
@@ -494,14 +529,16 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else
                     {
+                        state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "CORYT":
                     if (patternId.Contains("Pattern 1"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
-                        case 0: return "Belly";
+                        case 0: return "Belly/Nose*";
                         case 1: return "Body";
                         case 2: return "Tail";
                         case 3: return "Crest Bottom";
@@ -512,12 +549,13 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                     }
                     else if (patternId.Contains("Pattern 2"))
                     {
+                        state.Working.JournalColor = state.Working.PatternColor1;
                         switch (idx)
                         {
-                        case 0: return "Nose/Claw (Tint)";
+                        case 0: return "Claws*/Nose*";
                         case 1: return "Hood";
                         case 2: return "Legs";
-                        case 3: return "Tail/Claws";
+                        case 3: return "Belly";
                         case 4: return "Light Gradient";
                         case 5: return "Eye Colour";
                         default: return "Unknown";
