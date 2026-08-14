@@ -15,19 +15,33 @@ namespace PaleoPinesDinoStudio.UI.Tabs
         private static string _lastSetupSpecies = "";
         private static int _lastSetupCount = -1;
         private static int _lastSpeciesCount = -1;
+        private static string _speciesFilter = "";
+        private static string _lastSpeciesFilter = "";
+        private static string _setupFilter = "";
+        private static string _lastSetupFilter = "";
+        private static readonly System.Collections.Generic.List<string> _filteredSpecies =
+            new System.Collections.Generic.List<string>();
 
         public static void Build(StudioState state, RectTransform parent)
         {
             UiFactory.Label(parent, "SpeciesTitle", "Species", 0f, 0f, 320f, 26f, 22f, UiPalette.Text, UiPalette.LeftMid);
-            _speciesScroll = UiFactory.Scroll(parent, "SpeciesList", 0f, 30f, 320f, 650f);
+            UiFactory.Label(parent, "SpeciesFilterLabel", "Filter:", 0f, 28f, 60f, 24f, 16f, UiPalette.Dim, UiPalette.LeftMid);
+            UiFactory.TextField(parent, "SpeciesFilter", 60f, 28f, 260f, 28f,
+                () => _speciesFilter, v => _speciesFilter = v);
+            _speciesScroll = UiFactory.Scroll(parent, "SpeciesList", 0f, 60f, 320f, 620f);
 
             UiFactory.Label(parent, "SetupTitle", "Colour/Pattern setups", 340f, 0f, 1000f, 26f, 22f, UiPalette.Text, UiPalette.LeftMid);
-            _setupTitle = UiFactory.Label(parent, "SetupTitle2", "", 340f, 0f, 1000f, 26f, 22f, UiPalette.Dim, UiPalette.LeftMid);
-            _setupScroll = UiFactory.Scroll(parent, "SetupList", 340f, 30f, 1176f, 650f);
+            UiFactory.Label(parent, "SetupFilterLabel", "Filter:", 340f, 28f, 60f, 24f, 16f, UiPalette.Dim, UiPalette.LeftMid);
+            UiFactory.TextField(parent, "SetupFilter", 400f, 28f, 600f, 28f,
+                () => _setupFilter, v => _setupFilter = v);
+            _setupTitle = UiFactory.Label(parent, "SetupTitle2", "", 1000f, 28f, 520f, 24f, 16f, UiPalette.Dim, UiPalette.LeftMid);
+            _setupScroll = UiFactory.Scroll(parent, "SetupList", 340f, 60f, 1176f, 620f);
 
             _lastSpeciesCount = -1;
             _lastSetupSpecies = "";
             _lastSetupCount = -1;
+            _lastSpeciesFilter = "";
+            _lastSetupFilter = "";
             RebuildSpecies();
             RebuildSetups();
         }
@@ -39,6 +53,21 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 _speciesIndex = -1;
                 _setupIndex = -1;
                 RebuildSpecies();
+                RebuildSetups();
+                return;
+            }
+
+            if (_speciesFilter != _lastSpeciesFilter)
+            {
+                _lastSpeciesFilter = _speciesFilter;
+                RebuildSpecies();
+                RebuildSetups();
+                return;
+            }
+
+            if (_setupFilter != _lastSetupFilter)
+            {
+                _lastSetupFilter = _setupFilter;
                 RebuildSetups();
                 return;
             }
@@ -59,23 +88,43 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static string SelectedSpecies()
         {
-            if (_speciesIndex < 0 || _speciesIndex >= Core.GameCatalog.SpeciesIds.Count) return null;
-            return Core.GameCatalog.SpeciesIds[_speciesIndex];
+            if (_speciesIndex < 0 || _speciesIndex >= _filteredSpecies.Count) return null;
+            return _filteredSpecies[_speciesIndex];
         }
 
         private static void RebuildSpecies()
         {
             _lastSpeciesCount = Core.GameCatalog.SpeciesIds.Count;
+            _filteredSpecies.Clear();
+            string f = _speciesFilter != null ? _speciesFilter.Trim().ToLowerInvariant() : "";
+            for (int i = 0; i < Core.GameCatalog.SpeciesIds.Count; i++)
+            {
+                string id = Core.GameCatalog.SpeciesIds[i];
+                if (f.Length == 0 || id.IndexOf(f, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    _filteredSpecies.Add(id);
+                }
+            }
+
+            if (_speciesIndex >= _filteredSpecies.Count) _speciesIndex = -1;
+
             if (_speciesScroll == null) return;
             GameUI.RemoveScrollButtons(_speciesScroll);
             UiFactory.ClearChildren(_speciesScroll.Content);
             _speciesScroll.ContentHeight = 0f;
             _speciesScroll.Scroll = 0f;
 
-            for (int i = 0; i < Core.GameCatalog.SpeciesIds.Count; i++)
+            if (_filteredSpecies.Count == 0)
+            {
+                UiFactory.Label(_speciesScroll.Content, "SpeciesEmpty", "No species match the filter.",
+                    0f, 0f, _speciesScroll.view.width, 40f, 17f, UiPalette.Dim, UiPalette.LeftMid);
+                return;
+            }
+
+            for (int i = 0; i < _filteredSpecies.Count; i++)
             {
                 int idx = i;
-                string id = Core.GameCatalog.SpeciesIds[i];
+                string id = _filteredSpecies[i];
                 var b = UiFactory.ScrollButton(_speciesScroll, "Species_" + idx, id, i * 32f, 316f, 30f,
                     () => SelectSpecies(idx));
                 b.IsActive = () => _speciesIndex == idx;
@@ -97,7 +146,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             string species = SelectedSpecies();
             if (_setupTitle != null)
             {
-                _setupTitle.text = species != null ? "Colour/Pattern setups for " + species : "Select a species on the left to browse its setups.";
+                _setupTitle.text = species != null ? "Setups for " + species : "Select a species on the left to browse its setups.";
             }
 
             _lastSetupSpecies = species ?? "";
@@ -114,6 +163,8 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             }
             _lastSetupCount = setups.Count;
 
+            string f = _setupFilter != null ? _setupFilter.Trim().ToLowerInvariant() : "";
+            int shown = 0;
             for (int i = 0; i < setups.Count; i++)
             {
                 var setup = setups[i];
@@ -126,13 +177,27 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 string rarity = setup.Rarity.ToString();
                 string label = "[" + rarity + "]  " + pName + "  /  " + cName;
 
-                int idx = i;
-                var b = UiFactory.ScrollButton(_setupScroll, "Setup_" + idx, label, i * 32f, 1172f, 30f,
+                if (f.Length > 0)
+                {
+                    string hay = label.ToLowerInvariant();
+                    if (hay.IndexOf(f, System.StringComparison.OrdinalIgnoreCase) < 0) continue;
+                }
+
+                string lbl = label;
+                int row = shown;
+                var b = UiFactory.ScrollButton(_setupScroll, "Setup_" + row, lbl, row * 32f, 1172f, 30f,
                     () => BeginEdit(Main.State, species, setup));
-                b.IsActive = () => _setupIndex == idx;
+                b.IsActive = () => _setupIndex == row;
                 b.Label.fontSize = 18f;
                 b.Label.horizontalAlignment = Il2CppTMPro.HorizontalAlignmentOptions.Left;
                 b.Label.verticalAlignment = Il2CppTMPro.VerticalAlignmentOptions.Middle;
+                shown++;
+            }
+
+            if (shown == 0)
+            {
+                UiFactory.Label(_setupScroll.Content, "SetupsEmpty", "No setups match the filter.",
+                    0f, 0f, _setupScroll.view.width, 40f, 17f, UiPalette.Dim, UiPalette.LeftMid);
             }
         }
 

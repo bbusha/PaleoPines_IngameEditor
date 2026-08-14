@@ -29,12 +29,27 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
             EnsureViewport(w.SpeciesId);
 
-            UiFactory.Label(parent, "ViewTitle", "Preview - your colours on the real dino model (rotates automatically).",
+            UiFactory.Label(parent, "ViewTitle", "Preview - your colours on the real dino model. Drag to orbit, scroll to zoom.",
                 0f, 0f, 1200f, 26f, 22f, UiPalette.Text, UiPalette.LeftMid);
 
             if (Viewport != null && Viewport.IsReady && Viewport.Output != null)
             {
                 UiFactory.Raw(parent, "ViewportImage", 0f, 40f, PreviewWidth, PreviewHeight, Viewport.Output);
+
+                // Drag on the preview to orbit the model; pause auto-rotate while doing so.
+                GameUI.Drags.Add(new UiDrag
+                {
+                    r = new Rect(0f, 40f, PreviewWidth, PreviewHeight),
+                    Origin = () => GameUI.ContentOrigin(),
+                    OnDragDelta = d => { if (Viewport != null) Viewport.DragOrbit(d); }
+                });
+
+                UiFactory.Toggle(parent, "AutoRotate", "Auto rotate", 0f, 40f + PreviewHeight + 8f, 150f, 26f,
+                    () => Viewport != null && Viewport.AutoRotate,
+                    () => { if (Viewport != null) Viewport.SetAutoRotate(!Viewport.AutoRotate); });
+                UiFactory.Label(parent, "ViewHint2",
+                    "Drag the preview to orbit. Scroll to zoom. Auto-rotate resumes after a short pause.",
+                    160f, 40f + PreviewHeight + 8f, 500f, 26f, 16f, UiPalette.Dim, UiPalette.LeftMid);
             }
 
             UiFactory.Label(parent, "ViewHint",
@@ -69,6 +84,21 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
             EnsureViewport(w.SpeciesId);
 
+            // Scroll wheel over the preview zooms the camera.
+            float wheel = Input.mouseScrollDelta.y;
+            if (Mathf.Abs(wheel) > 0.001f && Viewport != null && Viewport.IsReady)
+            {
+                Vector2 mp = UiFactory.DesignPoint(Input.mousePosition);
+                Rect view = new Rect(0f, 40f, PreviewWidth, PreviewHeight);
+                Vector2 origin = GameUI.ContentOrigin();
+                view.x += origin.x;
+                view.y += origin.y;
+                if (UiFactory.InRect(view, mp))
+                {
+                    Viewport.Zoom(wheel);
+                }
+            }
+
             if (Time.unscaledTime - _lastAutoApply > 0.3f)
             {
                 _lastAutoApply = Time.unscaledTime;
@@ -97,25 +127,13 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
         private static void ApplyColours(Core.WorkingAssets w)
         {
-            Color[] cur = new Color[]
-            {
-                w.BaseColor, w.PatternColor1, w.PatternColor2, w.PatternColor3, w.PatternColor4, w.JournalColor
-            };
-            if (_lastColors != null && ColorsEqual(_lastColors, cur)) return;
+            Color[] cur = Core.ColorUtil.WorkingColors(w);
+            if (Core.ColorUtil.ColorsEqual(_lastColors, cur)) return;
             _lastColors = cur;
             if (Viewport != null && Viewport.IsReady)
             {
                 Viewport.ApplyColours(w);
             }
-        }
-
-        private static bool ColorsEqual(Color[] a, Color[] b)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
-                if (a[i].r != b[i].r || a[i].g != b[i].g || a[i].b != b[i].b) return false;
-            }
-            return true;
         }
     }
 }

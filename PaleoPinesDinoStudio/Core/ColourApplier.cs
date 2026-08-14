@@ -24,7 +24,11 @@ namespace PaleoPinesDinoStudio.Core
         /// gameplay context, so SetColourData throws on it - the preview only needs the material
         /// path, so we skip it there.
         /// </param>
-        public static void Apply(DinoPawn pawn, DinoPattern pattern, DinoColor color, bool setColourData = true)
+        /// <param name="eyeColor">
+        /// Optional eye tint written to the eye renderers. The game keeps eyes texture-driven,
+        /// so this only takes effect when the eye shader exposes a colour property.
+        /// </param>
+        public static void Apply(DinoPawn pawn, DinoPattern pattern, DinoColor color, bool setColourData = true, Color? eyeColor = null)
         {
             if (pawn == null || pattern == null || color == null) return;
 
@@ -34,7 +38,7 @@ namespace PaleoPinesDinoStudio.Core
             }
             catch (System.Exception e) { MelonLoader.MelonLogger.Error("SetupDinoMaterials failed: " + e); }
 
-            try { ApplyBodyColoursDirect(pawn, pattern, color); }
+            try { ApplyBodyColoursDirect(pawn, pattern, color, eyeColor); }
             catch (System.Exception e) { MelonLoader.MelonLogger.Error("ApplyBodyColoursDirect failed: " + e); }
 
             if (setColourData)
@@ -51,7 +55,7 @@ namespace PaleoPinesDinoStudio.Core
         /// _PatternColor1..4, textures are _BaseMap and _PatternMask. Common aliases are also
         /// handled in case another model uses them.
         /// </summary>
-        public static void ApplyBodyColoursDirect(DinoPawn pawn, DinoPattern pattern, DinoColor color)
+        public static void ApplyBodyColoursDirect(DinoPawn pawn, DinoPattern pattern, DinoColor color, Color? eyeColor = null)
         {
             if (pawn == null) return;
             Texture2D maskTex = pattern != null ? pattern._PatternMask : null;
@@ -98,6 +102,51 @@ namespace PaleoPinesDinoStudio.Core
                 SetColorIf(m, "_PatternColor3", color._PatternColor3);
                 SetColorIf(m, "_PatternColor4", color._PatternColor4);
             }
+
+            if (eyeColor.HasValue) ApplyEyeColour(pawn, eyeColor.Value);
+        }
+
+        /// <summary>
+        /// Writes the eye tint onto the eye renderer materials. The game bakes eye colour into
+        /// textures, so this is best-effort: it only affects shaders that expose a colour
+        /// property (common candidates are tried and guarded with HasProperty).
+        /// </summary>
+        public static void ApplyEyeColour(DinoPawn pawn, Color eyeColor)
+        {
+            if (pawn == null) return;
+
+            void SetOn(Material m)
+            {
+                if (m == null) return;
+                SetColorIf(m, "_EyeColor", eyeColor);
+                SetColorIf(m, "_EyeTint", eyeColor);
+                SetColorIf(m, "_EyeColour", eyeColor);
+                SetColorIf(m, "_EmissionColor", eyeColor);
+                SetColorIf(m, "_Color", eyeColor);
+            }
+
+            var eyes = pawn.eyeRenderers;
+            if (eyes != null)
+            {
+                for (int i = 0; i < eyes.Count; i++)
+                {
+                    if (eyes[i] == null) continue;
+                    SetOn(eyes[i].material);
+                }
+            }
+
+            var children = pawn.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < children.Length; i++)
+            {
+                var r = children[i];
+                if (r == null) continue;
+                var m = r.material;
+                if (m == null) continue;
+                if (m.HasProperty("_EyeColor") || m.HasProperty("_EyeTint") || m.HasProperty("_EyeColour"))
+                {
+                    SetOn(m);
+                }
+            }
         }
 
         private static void SetColorIf(Material m, string prop, Color c)
@@ -125,28 +174,11 @@ namespace PaleoPinesDinoStudio.Core
             if (Time.unscaledTime - _lastLiveApply < 0.12f) return;
             _lastLiveApply = Time.unscaledTime;
 
-            Color[] cur = WorkingColors(w);
-            if (_lastLiveColors != null && ColorsEqual(_lastLiveColors, cur)) return;
+            Color[] cur = ColorUtil.WorkingColors(w);
+            if (ColorUtil.ColorsEqual(_lastLiveColors, cur)) return;
             _lastLiveColors = cur;
 
-            Apply(state.LivePawn, w.WorkingPattern, w.WorkingColor);
-        }
-
-        private static Color[] WorkingColors(WorkingAssets w)
-        {
-            return new Color[]
-            {
-                w.BaseColor, w.PatternColor1, w.PatternColor2, w.PatternColor3, w.PatternColor4, w.JournalColor
-            };
-        }
-
-        private static bool ColorsEqual(Color[] a, Color[] b)
-        {
-            for (int i = 0; i < a.Length; i++)
-            {
-                if (a[i].r != b[i].r || a[i].g != b[i].g || a[i].b != b[i].b) return false;
-            }
-            return true;
+            Apply(state.LivePawn, w.WorkingPattern, w.WorkingColor, setColourData: true, eyeColor: w.EyeColor);
         }
 
         private static bool IsPawnAlive(DinoPawn pawn)
@@ -231,8 +263,17 @@ namespace PaleoPinesDinoStudio.Core
                 if (GameCatalog.SetupsBySpecies.TryGetValue(speciesId, out var list)) setups = list;
 
                 // Read the pawn's current rendered look from its body material.
+                // The game's colour variants are written to per-renderer material
+                // instances (renderer.material); sharedMaterial is the untouched
+                // base-skin asset, which is exactly what was making selected dinos
+                // snap back to their base colours.
                 Renderer r0 = pawn.bodyRenderers != null && pawn.bodyRenderers.Count > 0 ? pawn.bodyRenderers[0] : null;
-                Material m = r0 != null ? r0.sharedMaterial : null;
+                Material m = null;
+                if (r0 != null)
+                {
+                    try { m = r0.material; } catch { }
+                    if (m == null) { try { m = r0.sharedMaterial; } catch { } }
+                }
 
                 Color baseCol = Color.white, p1 = Color.black, p2 = Color.black, p3 = Color.black, p4 = Color.black, journal = Color.gray;
                 // Base tint lives in _Color on the game's Dino shader (aliased _BaseColor elsewhere).
@@ -264,6 +305,24 @@ namespace PaleoPinesDinoStudio.Core
                     return false;
                 }
 
+                // Read the eye tint from the eye renderer materials (best-effort: only when
+                // the eye shader exposes a colour property). Falls back to the pattern's
+                // eyelid colour so the channel still starts at a sensible value.
+                Color eyeCol = pattern._EyelidDefaultColour;
+                var eyeR = pawn.eyeRenderers;
+                if (eyeR != null && eyeR.Count > 0)
+                {
+                    Material em = null;
+                    try { em = eyeR[0].material; } catch { }
+                    if (em == null) { try { em = eyeR[0].sharedMaterial; } catch { } }
+                    Color tmp;
+                    if (TryColor(em, "_EyeColor", out tmp) || TryColor(em, "_EyeTint", out tmp)
+                        || TryColor(em, "_EyeColour", out tmp) || TryColor(em, "_EmissionColor", out tmp))
+                    {
+                        eyeCol = tmp;
+                    }
+                }
+
                 // A white _Color means "use the baked base texture as-is", so for a useful
                 // editing base we prefer the game's real colour for this pattern instead.
                 if (!haveBase || (baseCol.r > 0.99f && baseCol.g > 0.99f && baseCol.b > 0.99f))
@@ -277,16 +336,19 @@ namespace PaleoPinesDinoStudio.Core
                 journal = fallbackColor != null ? fallbackColor._JournalDisplayColor : journal;
 
                 var w = new WorkingAssets();
-                w.LoadFromPawn(speciesId, pattern, baseCol, p1, p2, p3, p4, journal);
+                w.LoadFromPawn(speciesId, pattern, baseCol, p1, p2, p3, p4, journal, eyeCol);
                 state.Working = w;
                 state.LivePawn = pawn;
 
                 DumpMaterialInfo(pawn, "load");
-                Apply(pawn, pattern, w.WorkingColor);
+                Apply(pawn, pattern, w.WorkingColor, setColourData: true, eyeColor: eyeCol);
 
                 string uid = "?";
                 try { uid = pawn.Uid; } catch { }
-                state.SetStatus("Loaded " + speciesId + " (uid " + uid + ") as base - colours now update live.");
+                string who = speciesId;
+                string dn = Injector.DinoDisplayName(pawn);
+                if (!string.IsNullOrEmpty(dn)) who = dn + " (" + speciesId + ")";
+                state.SetStatus("Loaded " + who + " (uid " + uid + ") as base - colours now update live.");
                 return true;
             }
             catch (System.Exception e)

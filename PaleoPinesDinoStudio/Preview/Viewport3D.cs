@@ -18,12 +18,20 @@ namespace PaleoPinesDinoStudio.Preview
         public RenderTexture Output { get { return _rt; } }
         public bool IsReady { get; private set; }
         public string SpeciesId { get; private set; }
+        public bool AutoRotate { get { return _autoRotate; } }
 
         /// <summary>False when the viewport GameObjects were destroyed (e.g. scene unload).</summary>
         public bool IsAlive { get { return _root != null; } }
 
         public int ViewWidth = 512;
         public int ViewHeight = 512;
+
+        private float _yaw;
+        private float _pitch;
+        private float _zoom = 6f;
+        private bool _autoRotate;
+        private float _lastInteraction;
+        private const float OrbitDist = 12f;
 
         public void CreateFor(string speciesId)
         {
@@ -53,6 +61,11 @@ namespace PaleoPinesDinoStudio.Preview
             try
             {
                 SpeciesId = speciesId;
+                _yaw = 0f;
+                _pitch = 0f;
+                _zoom = 6f;
+                _autoRotate = false;
+                _lastInteraction = 0f;
                 _root = new GameObject("DinoStudio_Viewport");
                 _root.transform.position = new Vector3(99999f, 99999f, 99999f);
 
@@ -121,7 +134,7 @@ namespace PaleoPinesDinoStudio.Preview
             {
                 // The preview pawn has no gameplay context, so SetColourData would throw on it.
                 // SetupDinoMaterials + the direct property writes are enough for the preview.
-                Core.ColourApplier.Apply(_pawn, assets.WorkingPattern, assets.WorkingColor, setColourData: false);
+                Core.ColourApplier.Apply(_pawn, assets.WorkingPattern, assets.WorkingColor, setColourData: false, eyeColor: assets.EyeColor);
                 Core.ColourApplier.DumpMaterialInfo(_pawn, "preview");
             }
             catch (System.Exception e)
@@ -132,10 +145,64 @@ namespace PaleoPinesDinoStudio.Preview
 
         public void Tick()
         {
-            if (_dino != null)
+            if (_dino == null || _root == null) return;
+            if (_autoRotate && Time.unscaledTime - _lastInteraction > 1.5f)
             {
-                _dino.transform.Rotate(0f, 15f * Time.unscaledDeltaTime, 0f, Space.World);
+                _yaw += 15f * Time.unscaledDeltaTime;
             }
+            ApplyTransform();
+        }
+
+        /// <summary>Drag to orbit. Delta is in design units (x = yaw, y = pitch).</summary>
+        public void DragOrbit(Vector2 designDelta)
+        {
+            _yaw = Wrap(_yaw - designDelta.x * 0.3f, 360f);
+            _pitch = Mathf.Clamp(_pitch - designDelta.y * 0.3f, -70f, 70f);
+            _autoRotate = false;
+            _lastInteraction = Time.unscaledTime;
+            ApplyTransform();
+        }
+
+        /// <summary>Positive zooms in (smaller orthographic size).</summary>
+        public void Zoom(float delta)
+        {
+            _zoom = Mathf.Clamp(_zoom - delta * 0.5f, 2.5f, 12f);
+            _lastInteraction = Time.unscaledTime;
+            ApplyTransform();
+        }
+
+        public void SetAutoRotate(bool on)
+        {
+            _autoRotate = on;
+            if (on) _lastInteraction = 0f;
+        }
+
+        private void ApplyTransform()
+        {
+            if (_root == null || _cam == null) return;
+
+            // The model stays fixed; the camera orbits it. Keeping the camera looking at
+            // the model centre keeps rotation smooth and centred regardless of the model's
+            // pivot (rotating the model root itself made it swing and shake).
+            _root.transform.localRotation = Quaternion.identity;
+
+            float radYaw = _yaw * Mathf.Deg2Rad;
+            float radPitch = _pitch * Mathf.Deg2Rad;
+            float cp = Mathf.Cos(radPitch);
+            Vector3 offset = new Vector3(
+                OrbitDist * Mathf.Sin(radYaw) * cp,
+                OrbitDist * Mathf.Sin(radPitch),
+                OrbitDist * Mathf.Cos(radYaw) * cp);
+            _cam.transform.position = _root.transform.position + offset;
+            _cam.transform.rotation = Quaternion.LookRotation(-offset, Vector3.up);
+            _cam.orthographicSize = _zoom;
+        }
+
+        private static float Wrap(float a, float m)
+        {
+            a %= m;
+            if (a < 0f) a += m;
+            return a;
         }
 
         public void Destroy()

@@ -21,6 +21,7 @@ namespace PaleoPinesDinoStudio.Core
         public Color PatternColor3 = Color.black;
         public Color PatternColor4 = Color.black;
         public Color JournalColor = Color.gray;
+        public Color EyeColor = Color.white;
         public string ColorUid = "DinoColor-Custom";
         public string PatternUid = "DinoPattern-Custom";
         public string SetupDisplayName = "";
@@ -44,6 +45,7 @@ namespace PaleoPinesDinoStudio.Core
                 PatternColor3 = color._PatternColor3;
                 PatternColor4 = color._PatternColor4;
                 JournalColor = color._JournalDisplayColor;
+                EyeColor = pattern != null ? pattern._EyelidDefaultColour : Color.white;
             }
 
             SourcePattern = pattern;
@@ -55,7 +57,7 @@ namespace PaleoPinesDinoStudio.Core
         }
 
         public void LoadFromPawn(string speciesId, DinoPattern pattern, Color baseCol,
-            Color p1, Color p2, Color p3, Color p4, Color journal)
+            Color p1, Color p2, Color p3, Color p4, Color journal, Color eyeCol)
         {
             SpeciesId = speciesId;
             ColorUid = "DinoColor-" + Guid8();
@@ -65,6 +67,7 @@ namespace PaleoPinesDinoStudio.Core
             PatternColor3 = p3;
             PatternColor4 = p4;
             JournalColor = journal;
+            EyeColor = eyeCol;
 
             SourcePattern = pattern;
             WorkingPattern = pattern;
