@@ -1,11 +1,9 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\chris\\source\\repos\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {}
     "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {}
   },
   "projects": {
-    "C:\\Users\\chris\\source\\repos\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {
     "C:\\Users\\graff\\Documents\\mods\\Paleo Pines\\Editor\\PaleoPines_IngameEditor\\PaleoPinesDinoStudio\\PaleoPinesDinoStudio.csproj": {
       "version": "1.0.0",
       "restore": {
