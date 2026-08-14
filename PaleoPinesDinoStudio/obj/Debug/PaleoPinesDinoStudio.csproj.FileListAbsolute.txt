@@ -114,3 +114,13 @@ C:\Users\chris\source\repos\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\Uni
 C:\Users\chris\source\repos\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\UnityEngine.WindModule.dll
 C:\Users\chris\source\repos\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\UnityEngine.XRModule.dll
 C:\Users\chris\source\repos\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPin.F49CFABB.Up2Date
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\PaleoPinesDinoStudio.deps.json
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\PaleoPinesDinoStudio.dll
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.csproj.AssemblyReference.cache
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.AssemblyInfoInputs.cache
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.AssemblyInfo.cs
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.csproj.CoreCompileInputs.cache
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.dll
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\refint\PaleoPinesDinoStudio.dll
+c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\ref\PaleoPinesDinoStudio.dll

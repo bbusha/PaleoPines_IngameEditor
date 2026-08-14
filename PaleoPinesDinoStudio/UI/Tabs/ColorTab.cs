@@ -234,16 +234,36 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             _swatches[idx].color = new Color(c.r, c.g, c.b, 1f);
         }
 
+        // Returns the default color region name for a given index.
+        private static string ColorRegionDefault(int idx)
+        {
+            switch (idx)
+            {
+                case 0: return "Base";
+                case 1: return "Pattern Colour 1";
+                case 2: return "Pattern Colour 2";
+                case 3: return "Pattern Colour 3";
+                case 4: return "Pattern Colour 4";
+                case 5: return "Journal Display";
+                case 6: return "Eye Colour";
+                default: return "Unknown";
+            }
+        }
+
+        // Returns the color region name for a given index, taking into account species and pattern.
         private static string SetColorRegions(StudioState state, int idx)
         {
             var w = state != null ? state.Working : null;
             string speciesId = w != null ? w.SpeciesId : "";
+            string patternId = w != null ? w.PatternUid : "";
 
             switch (speciesId)
             {
                 case "ALLOS":
-                    switch (idx)
+                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
                     {
+                        switch (idx)
+                        {
                         case 0: return "Belly";
                         case 1: return "Body";
                         case 2: return "Nose/Claws";
@@ -252,19 +272,269 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 5: return "Journal Display";
                         case 6: return "Eye Colour";
                         default: return "Unknown";
+                        }
                     }
-                default:
-                    switch (idx)
+                    else
                     {
-                        case 0: return "Base";
-                        case 1: return "Pattern Colour 1";
-                        case 2: return "Pattern Colour 2";
-                        case 3: return "Pattern Colour 3";
-                        case 4: return "Pattern Colour 4";
+                        return ColorRegionDefault(idx);
+                    }
+                case "ANKYL":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Horns";
+                        case 3: return "Armour/Face";
+                        case 4: return "UNUSED REGION";
                         case 5: return "Journal Display";
                         case 6: return "Eye Colour";
                         default: return "Unknown";
+                        }
                     }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Horns";
+                        case 3: return "Face";
+                        case 4: return "Armour";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "ARCHA":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Wings/Claws";
+                        case 1: return "Belly";
+                        case 2: return "Body";
+                        case 3: return "Nose/Feet";
+                        case 4: return "Details";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Claws";
+                        case 1: return "Belly/Neck/Wings/Tail";
+                        case 2: return "Head/Body/Tail Stripes";
+                        case 3: return "Crest";
+                        case 4: return "Details";
+                        case 5: return "Nose/Feet/Back Stripes";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "BARYO":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly/Claws";
+                        case 1: return "Body";
+                        case 2: return "Details";
+                        case 3: return "Tail Circles";
+                        case 4: return "Eye Oval/Chin";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly/Claws";
+                        case 1: return "Body";
+                        case 2: return "Eye Stripe/Details";
+                        case 3: return "Stripes/Feet/Neck Gradient";
+                        case 4: return "Nose";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "CARNO":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Horns/Stripes";
+                        case 3: return "Chin Gradient";
+                        case 4: return "Chest Gradient";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Horns/Scales";
+                        case 3: return "Chin Gradient/Spines";
+                        case 4: return "Chest Gradient";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "CENTR":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Spots";
+                        case 3: return "Beak";
+                        case 4: return "Details";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "CERAT":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly/Feet";
+                        case 1: return "Body";
+                        case 2: return "Spots/Spines";
+                        case 3: return "Nose Horn";
+                        case 4: return "Claws/Details";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Splotches";
+                        case 1: return "Belly/Feet";
+                        case 2: return "Body";
+                        case 3: return "Horns/Claws/Tail Stripes";
+                        case 4: return "Horn Tip/Leg Stripe";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "COELO":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Legs";
+                        case 3: return "Head/Tail";
+                        case 4: return "Claws/Details";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "COMPS":
+                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "UNUSED REGION";
+                        case 1: return "Belly";
+                        case 2: return "Back";
+                        case 3: return "Face/Feet";
+                        case 4: return "UNUSED REGION";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                case "CORYT":
+                    if (patternId.Contains("Pattern 1"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Belly";
+                        case 1: return "Body";
+                        case 2: return "Tail";
+                        case 3: return "Crest Bottom";
+                        case 4: return "Crest Top";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else if (patternId.Contains("Pattern 2"))
+                    {
+                        switch (idx)
+                        {
+                        case 0: return "Nose/Claw (Tint)";
+                        case 1: return "Hood";
+                        case 2: return "Legs";
+                        case 3: return "Tail/Claws";
+                        case 4: return "Light Gradient";
+                        case 5: return "Journal Display";
+                        case 6: return "Eye Colour";
+                        default: return "Unknown";
+                        }
+                    }
+                    else
+                    {
+                        return ColorRegionDefault(idx);
+                    }
+                default:
+                    return ColorRegionDefault(idx);
             }
         }
     }
