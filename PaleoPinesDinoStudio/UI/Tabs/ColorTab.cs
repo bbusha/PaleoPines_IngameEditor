@@ -1,16 +1,25 @@
+using Il2CppItalicPig.PaleoPines.Inventories;
 using System;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.UI;
 
 namespace PaleoPinesDinoStudio.UI.Tabs
 {
     public static class ColorTab
     {
+        
+
         private class Entry
         {
             public Func<Core.WorkingAssets, Color> Get;
             public Action<Core.WorkingAssets, Color> Set;
+
+            
         }
+
+        
+
 
         private static readonly Entry[] Entries =
         {
@@ -19,8 +28,9 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             new Entry { Get = w => w.PatternColor2, Set = (w, c) => w.PatternColor2 = c },
             new Entry { Get = w => w.PatternColor3, Set = (w, c) => w.PatternColor3 = c },
             new Entry { Get = w => w.PatternColor4, Set = (w, c) => w.PatternColor4 = c },
-            new Entry { Get = w => w.JournalColor,  Set = (w, c) => w.JournalColor = c },
             new Entry { Get = w => w.EyeColor,      Set = (w, c) => w.EyeColor = c },
+
+            //new Entry { Get = w => w.JournalColor, Set = (w, c) => w.JournalColor = c }, // this is how the journal color is set in the game, but it doesn't seem to be used for anything other than base body color
         };
 
         private static RawImage[] _swatches;
@@ -244,8 +254,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                 case 2: return "Pattern Colour 2";
                 case 3: return "Pattern Colour 3";
                 case 4: return "Pattern Colour 4";
-                case 5: return "Journal Display";
-                case 6: return "Eye Colour";
+                case 5: return "Eye Colour";
                 default: return "Unknown";
             }
         }
@@ -269,8 +278,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Nose/Claws";
                         case 3: return "Stripes";
                         case 4: return "Details";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -288,8 +296,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Horns";
                         case 3: return "Armour/Face";
                         case 4: return "UNUSED REGION";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -302,8 +309,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Horns";
                         case 3: return "Face";
                         case 4: return "Armour";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -321,8 +327,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Body";
                         case 3: return "Nose/Feet";
                         case 4: return "Details";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -354,8 +359,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Details";
                         case 3: return "Tail Circles";
                         case 4: return "Eye Oval/Chin";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -368,8 +372,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Eye Stripe/Details";
                         case 3: return "Stripes/Feet/Neck Gradient";
                         case 4: return "Nose";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -387,8 +390,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Horns/Stripes";
                         case 3: return "Chin Gradient";
                         case 4: return "Chest Gradient";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -401,8 +403,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Horns/Scales";
                         case 3: return "Chin Gradient/Spines";
                         case 4: return "Chest Gradient";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -420,8 +421,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Spots";
                         case 3: return "Beak";
                         case 4: return "Details";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -439,8 +439,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Spots/Spines";
                         case 3: return "Nose Horn";
                         case 4: return "Claws/Details";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -453,8 +452,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Body";
                         case 3: return "Horns/Claws/Tail Stripes";
                         case 4: return "Horn Tip/Leg Stripe";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -472,8 +470,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Legs";
                         case 3: return "Head/Tail";
                         case 4: return "Claws/Details";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -491,8 +488,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Back";
                         case 3: return "Face/Feet";
                         case 4: return "UNUSED REGION";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -510,8 +506,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Tail";
                         case 3: return "Crest Bottom";
                         case 4: return "Crest Top";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }
@@ -524,8 +519,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                         case 2: return "Legs";
                         case 3: return "Tail/Claws";
                         case 4: return "Light Gradient";
-                        case 5: return "Journal Display";
-                        case 6: return "Eye Colour";
+                        case 5: return "Eye Colour";
                         default: return "Unknown";
                         }
                     }

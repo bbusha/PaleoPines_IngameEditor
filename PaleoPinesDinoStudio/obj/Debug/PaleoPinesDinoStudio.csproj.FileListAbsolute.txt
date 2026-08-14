@@ -124,3 +124,4 @@ c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPi
 c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\PaleoPinesDinoStudio.dll
 c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\refint\PaleoPinesDinoStudio.dll
 c:\Users\graff\Documents\mods\Paleo Pines\Editor\PaleoPines_IngameEditor\PaleoPinesDinoStudio\obj\Debug\ref\PaleoPinesDinoStudio.dll
+C:\Users\chris\source\repos\PaleoPines_IngameEditor\PaleoPinesDinoStudio\bin\0Harmony.dll

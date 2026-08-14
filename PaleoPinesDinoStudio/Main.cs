@@ -43,6 +43,26 @@ namespace PaleoPinesDinoStudio
             }
         }
 
+        public override void OnGUI()
+        {
+            // Calculate position dynamically
+            int buttonWidth = 200;
+            int buttonHeight = 30;
+
+            float x = Screen.width - buttonWidth - 10; // 10px margin from right
+            float y = 10;                              // 10px margin from top
+
+            GUILayout.BeginArea(new Rect(x, y, buttonWidth, buttonHeight));
+
+            if (GUILayout.Button("Open Editor", GUILayout.Width(buttonWidth)))
+            {
+                State.ToggleEditor();
+            }
+
+            GUILayout.EndArea();
+        }
+
+
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             if (State == null) return;
