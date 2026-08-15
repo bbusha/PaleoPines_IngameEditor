@@ -258,1156 +258,471 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             }
         }
 
+        private static int CheckPatternNum(string patternId)
+        {
+            if(patternId.Contains("Pattern 1")) {return 1;}
+            else if (patternId.Contains("Pattern 2")) {return 2;}
+            else if (patternId.Contains("Pattern 3")) {return 3;}
+            else {return 0;}
+        }
+
         // Returns the color region name for a given index, taking into account species and pattern.
         private static string SetColorRegions(StudioState state, int idx)
         {
             var w = state != null ? state.Working : null;
             string speciesId = w != null ? w.SpeciesId : "";
             string patternId = w != null ? w.PatternUid : "";
+            int patternNum = CheckPatternNum(patternId);
 
             switch (speciesId)
             {
                 case "ALLOS":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Claws/Nose";
-                        case 3: return "Stripes";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1 || patternNum == 2 )
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch{0 => "Belly", 1 => "Body", 2 => "Claws/Nose",
+                        3 => "Stripes", 4 => "Details", 5 => "Eye Colour",
+                        _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "ANKYL":
-                    if (patternId.Contains("Pattern 1"))
-                    {
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor3;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Horns",
+                            3 => "Armour/Face", 4 => "UNUSED REGION", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2) {
                         state.Working.JournalColor = state.Working.PatternColor3;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Horns";
-                        case 3: return "Armour/Face";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor3;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Horns";
-                        case 3: return "Face";
-                        case 4: return "Armour";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Horns",
+                            3 => "Face", 4 => "Armour", 5 => "Eye Colour",
+                            _ => "Unknown",};}
                     else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "ARCHA":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws/Wings";
-                        case 1: return "Belly";
-                        case 2: return "Body";
-                        case 3: return "Feet/Nose";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws";
-                        case 1: return "Belly/Neck/Tail/Wings";
-                        case 2: return "Body/Head/Tail Stripes";
-                        case 3: return "Crest";
-                        case 4: return "Details";
-                        case 5: return "Back Stripes/Feet/Nose";
-                        case 6: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch{0 => "Claws/Wings", 1 => "Belly", 2 => "Body",
+                            3 => "Feet/Nose", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch { 0 => "Claws", 1 => "Belly/Neck/Tail/Wings",
+                            2 => "Body/Head/Tail Stripes", 3 => "Crest",
+                            4 => "Details", 5 => "Back Stripes/Feet/Nose",
+                            6 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "BARYO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws";
-                        case 1: return "Body";
-                        case 2: return "Details";
-                        case 3: return "Tail Circles";
-                        case 4: return "Chin/Eye Oval";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws";
-                        case 1: return "Body";
-                        case 2: return "Details/Eye Stripe";
-                        case 3: return "Feet/Neck Gradient/Stripes";
-                        case 4: return "Nose";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Claws", 1 => "Body",
+                            2 => "Details", 3 => "Tail Circles", 4 => "Chin/Eye Oval",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Claws", 1 => "Body",
+                            2 => "Details/Eye Stripe", 3 => "Feet/Neck Gradient/Stripes",
+                            4 => "Nose", 5 => "Eye Colour", _ => "Unknown",};}
+                    else{state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "CARNO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Horns/Stripes";
-                        case 3: return "Chin Gradient";
-                        case 4: return "Chest Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Horns/Scales";
-                        case 3: return "Chin Gradient/Spines";
-                        case 4: return "Chest Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Horns/Stripes",
+                            3 => "Chin Gradient", 4 => "Chest Gradient",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Horns/Scales",
+                            3 => "Chin Gradient/Spines", 4 => "Chest Gradient",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "CENTR":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Spots";
-                        case 3: return "Beak";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Spots",
+                            3 => "Beak", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "CERAT":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Feet";
-                        case 1: return "Body";
-                        case 2: return "Spines/Spots";
-                        case 3: return "Nose Horn";
-                        case 4: return "Claws/Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Splotches";
-                        case 1: return "Belly/Feet";
-                        case 2: return "Body";
-                        case 3: return "Claws/Horns/Tail Stripes";
-                        case 4: return "Leg Stripe/Horn Tip";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Feet",1 => "Body", 2 => "Spines/Spots",
+                            3 => "Nose Horn", 4 => "Claws/Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Splotches", 1 => "Belly/Feet", 2 => "Body",
+                            3 => "Claws/Horns/Tail Stripes", 4 => "Leg Stripe/Horn Tip",
+                            5 => "Eye Colour", _ => "Unknown", };}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "COELO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Legs";
-                        case 3: return "Head/Tail";
-                        case 4: return "Claws/Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch { 0 => "Belly", 1 => "Body", 2 => "Legs",
+                            3 => "Head/Tail", 4 => "Claws/Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "COMPS":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Belly";
-                        case 2: return "Back";
-                        case 3: return "Face/Feet";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Belly";
-                        case 2: return "Back";
-                        case 3: return "Face/Feet";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Belly",
+                            2 => "Back", 3 => "Face/Feet", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Belly",
+                            2 => "Back", 3 => "Face/Feet", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "CORYT":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Nose*";
-                        case 1: return "Body";
-                        case 2: return "Tail";
-                        case 3: return "Crest Bottom";
-                        case 4: return "Crest Top";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Claws*/Nose*";
-                        case 1: return "Hood";
-                        case 2: return "Legs";
-                        case 3: return "Belly";
-                        case 4: return "Light Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Nose*", 1 => "Body", 2 => "Tail",
+                            3 => "Crest Bottom",4 => "Crest Top", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Claws*/Nose*", 1 => "Hood", 2 => "Legs",
+                            3 => "Belly", 4 => "Light Gradient",5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);
                     }
                 case "DEINO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Loops";
-                        case 3: return "Beak/Legs";
-                        case 4: return "Claws/Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Tail Stripes";
-                        case 1: return "Body";
-                        case 2: return "Head/Stripes";
-                        case 3: return "Stripes";
-                        case 4: return "Claws/Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Loops",
+                            3 => "Beak/Legs", 4 => "Claws/Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Tail Stripes", 1 => "Body",
+                            2 => "Head/Stripes", 3 => "Stripes", 4 => "Claws/Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "DENON":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws";
-                        case 1: return "Body";
-                        case 2: return "Markings";
-                        case 3: return "Beak/Details/Legs";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1 || patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch { 0 => "Belly/Claws", 1 => "Body", 2 => "Markings",
+                            3 => "Beak/Details/Legs", 4 => "UNUSED REGION", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "DESMA":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Feet";
-                        case 1: return "Body";
-                        case 2: return "Armour/Claws/Markings";
-                        case 3: return "Claw Details/Spine";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Feet";
-                        case 1: return "Body";
-                        case 2: return "Stripes";
-                        case 3: return "Armour/Claws";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 3"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Feet";
-                        case 1: return "Body/Nose";
-                        case 2: return "Armour/Claws/Markings";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Feet", 1 => "Body",
+                            2 => "Armour/Claws/Markings", 3 => "Claw Details/Spine",
+                            4 => "Details", 5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Feet", 1 => "Body", 2 => "Stripes",
+                            3 => "Armour/Claws", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 3)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Feet", 1 => "Body/Nose",
+                            2 => "Armour/Claws/Markings", 3 => "UNUSED REGION", 4 => "Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "DILOP":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws";
-                        case 1: return "Body";
-                        case 2: return "Feet/Markings/Tail";
-                        case 3: return "Crest";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1 || patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Claws", 1 => "Body",
+                            2 => "Feet/Markings/Tail", 3 => "Crest", 4 => "Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "DIMET":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Eye Marking";
-                        case 1: return "Body";
-                        case 2: return "Bottom Spine Gradient";
-                        case 3: return "Claws";
-                        case 4: return "Top Spine Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Eye Marking", 1 => "Body",
+                            2 => "Bottom Spine Gradient", 3 => "Claws", 4 => "Top Spine Gradient",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "EUOPL":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor3;
-                        switch (idx)
-                        {
-                        case 0: return "Beak/Club/Horns";
-                        case 1: return "Belly/Claws";
-                        case 2: return "Body";
-                        case 3: return "Armour/Details";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor3;
+                        return idx switch {0 => "Beak/Club/Horns", 1 => "Belly/Claws",
+                            2 => "Body", 3 => "Armour/Details", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "GALLI":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Beak*/Belly/Legs*";
-                        case 1: return "Body";
-                        case 2: return "Head/Tail Stripes";
-                        case 3: return "Under Tail/Wing Details";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Beak*/Belly/Legs*";
-                        case 1: return "Body";
-                        case 2: return "Head/Tail Stripes";
-                        case 3: return "Under Tail/Wing Details";
-                        case 4: return "Eye Marking";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Beak*/Belly/Legs*", 1 => "Body",
+                            2 => "Head/Tail Stripes", 3 => "Under Tail/Wing Details",
+                            4 => "UNUSED REGION", 5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Beak*/Belly/Legs*", 1 => "Body",
+                            2 => "Head/Tail Stripes", 3 => "Under Tail/Wing Details",
+                            4 => "Eye Marking", 5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "KENTR":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Plate Tips";
-                        case 3: return "Plate Bottom";
-                        case 4: return "Stripes";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1 || patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Plate Tips",
+                            3 => "Plate Bottom", 4 => "Stripes", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "LUCKY":
-                    switch (idx)
-                    {
-                        case 0: return "Body*";
-                        case 1: return "UNUSED REGION";
-                        case 2: return "UNUSED REGION";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                    }
+                    return idx switch {0 => "Body*", 1 => "UNUSED REGION",
+                        2 => "UNUSED REGION", 3 => "UNUSED REGION", 4 => "UNUSED REGION",
+                        5 => "Eye Colour", _ => "Unknown",};
                 case "MEGAL":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws";
-                        case 1: return "Belly/Spots";
-                        case 2: return "Body";
-                        case 3: return "Nose/Tail Tip";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Nose*";
-                        case 1: return "Belly/Head Stripe/Tail";
-                        case 2: return "Body";
-                        case 3: return "Claws/Head/Spots 1";
-                        case 4: return "Spots 2";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Claws", 1 => "Belly/Spots", 2 => "Body",
+                            3 => "Nose/Tail Tip", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Nose*", 1 => "Belly/Head Stripe/Tail",
+                            2 => "Body", 3 => "Claws/Head/Spots 1", 4 => "Spots 2",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "MICRO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Claws/Wing Tips";
-                        case 1: return "Body";
-                        case 2: return "Bottom Gradient";
-                        case 3: return "Crest";
-                        case 4: return "Top Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Claws/Wing Tips", 1 => "Body",
+                            2 => "Bottom Gradient", 3 => "Crest", 4 => "Top Gradient",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "OURAN":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Markings";
-                        case 3: return "Details";
-                        case 4: return "Beak/Claws";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Markings",
+                            3 => "Details", 4 => "Beak/Claws", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "OVIRA":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws";
-                        case 1: return "Neck/Tail";
-                        case 2: return "Body";
-                        case 3: return "Crest";
-                        case 4: return "Head/Legs/Tail Stripes";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Claws", 1 => "Neck/Tail", 2 => "Body",
+                            3 => "Crest", 4 => "Head/Legs/Tail Stripes", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "PACHY":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Horns/Tail Stripes";
-                        case 1: return "Body";
-                        case 2: return "Skull Dome";
-                        case 3: return "Beak/Claws";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Horns/Feet/Tail Gradient";
-                        case 1: return "Body";
-                        case 2: return "Markings/Skull Dome";
-                        case 3: return "Beak/Claws";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Horns/Tail Stripes", 1 => "Body",
+                            2 => "Skull Dome", 3 => "Beak/Claws", 4 => "Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Horns/Feet/Tail Gradient",
+                            1 => "Body", 2 => "Markings/Skull Dome", 3 => "Beak/Claws",
+                            4 => "Details", 5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "PARAS":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Nose";
-                        case 3: return "Spine Gradient";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Back Stripes";
-                        case 3: return "Spine Gradient";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 3"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Spots";
-                        case 3: return "Spine Gradient";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Nose",
+                            3 => "Spine Gradient", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Back Stripes",
+                            3 => "Spine Gradient", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 3)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Spots",
+                            3 => "Spine Gradient", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "PINAC":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Armour";
-                        case 2: return "Beak/Claws/Club/Horns/Armour Gradiant";
-                        case 3: return "Head Spots";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Armour",
+                            2 => "Beak/Claws/Club/Horns/Armour Gradiant", 3 => "Head Spots",
+                            4 => "Details", 5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "POSTO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Body";
-                        case 2: return "Belly";
-                        case 3: return "Claws/Spine";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Body", 2 => "Belly",
+                            3 => "Claws/Spine", 4 => "UNUSED REGION", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "PSITT":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Beak/Belly";
-                        case 1: return "Body/Quill Tip";
-                        case 2: return "Claws/Head/Quill Middle/Spine Outline";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "Details/Quill Bottom/Spine";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Beak/Belly", 1 => "Body/Quill Tip",
+                            2 => "Claws/Head/Quill Middle/Spine Outline", 3 => "UNUSED REGION",
+                            4 => "Details/Quill Bottom/Spine", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "SARCO":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Belly";
-                        case 2: return "Body";
-                        case 3: return "Claws/Markings";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 3"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Belly";
-                        case 2: return "Body";
-                        case 3: return "Back";
-                        case 4: return "Spines";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
+                    if (patternNum == 1 || patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Belly", 2 => "Body",
+                            3 => "Claws/Markings", 4 => "UNUSED REGION", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 3)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Belly", 2 => "Body",
+                            3 => "Back", 4 => "Spines", 5 => "Eye Colour", _ => "Unknown",};}
                     else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "SCELI":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Body";
-                        case 2: return "Back";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "Horns/Tail Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Body", 2 => "Back",
+                            3 => "UNUSED REGION", 4 => "Horns/Tail Gradient", 5 => "Eye Colour",
+                            _ => "Unknown",};}
                     else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "SPINO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Neck Marking";
-                        case 3: return "Sail Stripes";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2") || patternId.Contains("Pattern 3"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Neck Marking";
-                        case 3: return "Bottom Sail Gradient";
-                        case 4: return "Top Sail Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Neck Marking",
+                            3 => "Sail Stripes", 4 => "UNUSED REGION", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else if (patternNum == 2 || patternNum == 3)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body", 2 => "Neck Marking",
+                            3 => "Bottom Sail Gradient", 4 => "Top Sail Gradient", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "STEGO":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Beak*/Belly/Claws/Thagomizer";
-                        case 1: return "Body";
-                        case 2: return "Plates/Stripes";
-                        case 3: return "Plate Gradient";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Beak*/Belly/Claws/Thagomizer",
+                            1 => "Body", 2 => "Plates/Stripes", 3 => "Plate Gradient",
+                            4 => "UNUSED REGION", 5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "STYRA":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws*/Horns*/Nostrils*";
-                        case 1: return "Belly";
-                        case 2: return "Body";
-                        case 3: return "Beak/Back/Eye Marking/Feet/Frill Outline";
-                        case 4: return "Frill Markings";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "Claws*/Horns*/Nostrils*";
-                        case 1: return "Belly/Body Dots/Center Frill Ring";
-                        case 2: return "Body/Outer Frill Ring";
-                        case 3: return "Beak/Back/Feet/Frill";
-                        case 4: return "Frill Dots";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Claws*/Horns*/Nostrils*", 1 => "Belly",
+                            2 => "Body", 3 => "Beak/Back/Eye Marking/Feet/Frill Outline",
+                            4 => "Frill Markings", 5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "Claws*/Horns*/Nostrils*",
+                            1 => "Belly/Body Dots/Center Frill Ring", 2 => "Body/Outer Frill Ring",
+                            3 => "Beak/Back/Feet/Frill", 4 => "Frill Dots", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "THERO":
-                    if (patternId.Contains("Pattern 1") || patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly*/Claws";
-                        case 1: return "Body/Feather Details";
-                        case 2: return "Beak/Feet";
-                        case 3: return "Back Markings/Eye Detail";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1 || patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly*/Claws", 1 => "Body/Feather Details",
+                            2 => "Beak/Feet", 3 => "Back Markings/Eye Detail", 4 => "Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "TRICE":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Claws/Horns";
-                        case 1: return "Body";
-                        case 2: return "Beak/Face Details/Leg Stripes";
-                        case 3: return "Back Gradient/Belly/Spines";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Claws/Horns";
-                        case 1: return "Body";
-                        case 2: return "Beak/Blush/Details";
-                        case 3: return "Back Gradient/Belly/Spines/Markings";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Claws/Horns", 1 => "Body",
+                            2 => "Beak/Face Details/Leg Stripes", 3 => "Back Gradient/Belly/Spines",
+                            4 => "Details", 5 => "Eye Colour", _ => "Unknown",};}
+                    if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Claws/Horns", 1 => "Body", 2 => "Beak/Blush/Details",
+                            3 => "Back Gradient/Belly/Spines/Markings", 4 => "Details",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "TROOD":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Head/Legs";
-                        case 1: return "Body";
-                        case 2: return "Tail Stripes/Wing Tips";
-                        case 3: return "Beak/Claws";
-                        case 4: return "Feet";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Head/Legs/Tail Fan";
-                        case 1: return "Body";
-                        case 2: return "Stripes/Wing Tips";
-                        case 3: return "Beak/Claws";
-                        case 4: return "Feet";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else if (patternId.Contains("Pattern 3"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Head/Legs/Tail Fan";
-                        case 1: return "Body";
-                        case 2: return "Heart/Stripes/Wing Tips";
-                        case 3: return "Beak/Claws";
-                        case 4: return "Feet";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Head/Legs", 1 => "Body", 2 => "Tail Stripes/Wing Tips",
+                            3 => "Beak/Claws", 4 => "Feet", 5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Head/Legs/Tail Fan", 1 => "Body",
+                            2 => "Stripes/Wing Tips", 3 => "Beak/Claws", 4 => "Feet",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else if (patternNum == 3)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Head/Legs/Tail Fan", 1 => "Body",
+                            2 => "Heart/Stripes/Wing Tips", 3 => "Beak/Claws", 4 => "Feet",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "TYRAN":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Tail Gradient";
-                        case 1: return "Body";
-                        case 2: return "Details/Head/Stripes";
-                        case 3: return "Claws";
-                        case 4: return "Face Gradient";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly";
-                        case 1: return "Body";
-                        case 2: return "Details/Head/Outer Stripes";
-                        case 3: return "Claws";
-                        case 4: return "Face Stripe/Inner Stripes";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Tail Gradient", 1 => "Body",
+                            2 => "Details/Head/Stripes", 3 => "Claws", 4 => "Face Gradient",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly", 1 => "Body",
+                            2 => "Details/Head/Outer Stripes", 3 => "Claws",
+                            4 => "Face Stripe/Inner Stripes", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "UTAHR":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Fan Gradient/Feet";
-                        case 1: return "Body";
-                        case 2: return "Beak/Claws/Markings";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "Details";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Feet";
-                        case 1: return "Body";
-                        case 2: return "Beak/Claws/Markings";
-                        case 3: return "Details";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Fan Gradient/Feet", 1 => "Body",
+                            2 => "Beak/Claws/Markings", 3 => "UNUSED REGION",
+                            4 => "Details", 5 => "Eye Colour", _ => "Unknown",};}
+                    if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Feet", 1 => "Body",
+                            2 => "Beak/Claws/Markings", 3 => "Details", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "VELOC":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Head/Belly";
-                        case 2: return "Body/Legs/Wings";
-                        case 3: return "Beak Tip/Claws/Tail/Wing Tips";
-                        case 4: return "Beak/Shoulders";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor2;
-                        switch (idx)
-                        {
-                        case 0: return "UNUSED REGION";
-                        case 1: return "Head/Belly";
-                        case 2: return "Body/Wings";
-                        case 3: return "Beak Tip/Claws/Tail/Wing Tips";
-                        case 4: return "Beak/Feet/Shoulders";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Head/Belly",
+                            2 => "Body/Legs/Wings", 3 => "Beak Tip/Claws/Tail/Wing Tips",
+                            4 => "Beak/Shoulders", 5 => "Eye Colour", _ => "Unknown",};}
+                    if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor2;
+                        return idx switch {0 => "UNUSED REGION", 1 => "Head/Belly",
+                            2 => "Body/Wings", 3 => "Beak Tip/Claws/Tail/Wing Tips",
+                            4 => "Beak/Feet/Shoulders", 5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "WUERH":
-                    if (patternId.Contains("Pattern 1"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws/Thagomizer";
-                        case 1: return "Body";
-                        case 2: return "Plates/Spots";
-                        case 3: return "UNUSED REGION";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    if (patternId.Contains("Pattern 2"))
-                    {
-                        state.Working.JournalColor = state.Working.PatternColor1;
-                        switch (idx)
-                        {
-                        case 0: return "Belly/Claws/Thagomizer";
-                        case 1: return "Body";
-                        case 2: return "Plates";
-                        case 3: return "Dots/Blush";
-                        case 4: return "UNUSED REGION";
-                        case 5: return "Eye Colour";
-                        default: return "Unknown";
-                        }
-                    }
-                    else
-                    {
-                        state.Working.JournalColor = state.Working.BaseColor;
-                        return ColorRegionDefault(idx);
-                    }
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Claws/Thagomizer", 1 => "Body",
+                            2 => "Plates/Spots", 3 => "UNUSED REGION", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    if (patternNum == 2)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Claws/Thagomizer", 1 => "Body",
+                            2 => "Plates", 3 => "Dots/Blush", 4 => "UNUSED REGION",
+                            5 => "Eye Colour", _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 default:
                     return ColorRegionDefault(idx);
             }
