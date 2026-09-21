@@ -566,6 +566,14 @@ namespace PaleoPinesDinoStudio.UI.Tabs
                             _ => "Unknown",};}
                     else {state.Working.JournalColor = state.Working.BaseColor;
                         return ColorRegionDefault(idx);}
+                case "PROTO":
+                    if (patternNum == 1)
+                    {state.Working.JournalColor = state.Working.PatternColor1;
+                        return idx switch {0 => "Belly/Face Markings", 1 => "Body", 2 => "Frill/Tail Stripes",
+                            3 => "Beak/Claws/Horn", 4 => "Details", 5 => "Eye Colour",
+                            _ => "Unknown",};}
+                    else {state.Working.JournalColor = state.Working.BaseColor;
+                        return ColorRegionDefault(idx);}
                 case "PSITT":
                     if (patternNum == 1)
                     {state.Working.JournalColor = state.Working.PatternColor1;

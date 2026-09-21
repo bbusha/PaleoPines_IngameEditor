@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 using Il2CppTMPro;
 using Il2CppItalicPig.PaleoPines.Dinos;
@@ -125,7 +127,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             {
                 int idx = i;
                 string id = _filteredSpecies[i];
-                var b = UiFactory.ScrollButton(_speciesScroll, "Species_" + idx, id, i * 32f, 316f, 30f,
+                var b = UiFactory.ScrollButton(_speciesScroll, "Species_" + idx, GetFullSpeciesName(id), i * 32f, 316f, 30f,
                     () => SelectSpecies(idx));
                 b.IsActive = () => _speciesIndex == idx;
                 b.Label.fontSize = 19f;
@@ -139,6 +141,62 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             _speciesIndex = index;
             _setupIndex = -1;
             RebuildSetups();
+        }
+
+        
+        private static string GetLastWord(string s) {
+
+        var words = s.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToArray();
+        return words[^1];
+        }
+
+        private static string GetFullSpeciesName(string s)
+        {
+            Console.WriteLine(s); 
+            switch (s)
+            {
+                case "ALLOS": return "Allosaurus";
+                case "ANKYL": return "Ankylosaurus";
+                case "ARCHA": return "Archaeopteryx";
+                case "BARYO": return "Baryonyx";
+                case "CARNO": return "Carnotaurus";
+                case "CENTR": return "Centrosaurus";
+                case "CERAT": return "Ceratosaurus";
+                case "COELO": return "Coelophysis";
+                case "COMPS": return "Compsognathus";
+                case "CORYT": return "Corythosaurus";
+                case "DEINO": return "Deinocheirus";
+                case "DENON": return "Deinonychus";
+                case "DESMA": return "Desmatosuchus";
+                case "DILOP": return "Dilophosaurus";
+                case "DIMET": return "Dimetrodon";
+                case "EUOPL": return "Euoplocephalus";
+                case "GALLI": return "Gallimimus";
+                case "KENTR": return "Kentrosaurus";
+                case "MEGAL": return "Megalosaurus";
+                case "MICRO": return "Microraptor";
+                case "OURAN": return "Ouranosaurus";
+                case "OVIRA": return "Oviraptor";
+                case "PACHY": return "Pachycephalosaurus";
+                case "PARAS": return "Parasaurolophus";
+                case "PINAC": return "Pinacosaurus";
+                case "POSTO": return "Postosuchus";
+                case "PROTO": return "Protoceratops";
+                case "PSITT": return "Psittacosaurus";
+                case "SARCO": return "Sarcosuchus";
+                case "SCELI": return "Scelidosaurus";
+                case "SPINO": return "Spinosaurus";
+                case "STEGO": return "Stegosaurus";
+                case "STYRA": return "Styracosaurus";
+                case "THERO": return "Therizinosaurus";
+                case "TRICE": return "Triceratops";
+                case "TROOD": return "Troodon";
+                case "TYRAN": return "Tyrannosaurus Rex";
+                case "UTAHR": return "Utahraptor";
+                case "VELOC": return "Velociraptor";
+                case "WUERH": return "Wuerhosaurus";
+                default: return s;
+            }
         }
 
         private static void RebuildSetups()
@@ -172,8 +230,8 @@ namespace PaleoPinesDinoStudio.UI.Tabs
 
                 var pattern = setup.Pattern;
                 var color = setup.Color;
-                string pName = pattern != null ? pattern.name : "(null pattern)";
-                string cName = color != null ? color.name : "(null color)";
+                string pName = pattern != null ? "Pattern " + GetLastWord(pattern.name) : "(null pattern)";
+                string cName = color != null ? GetLastWord(color.name) : "(null color)";
                 string rarity = setup.Rarity.ToString();
                 string label = "[" + rarity + "]  " + pName + "  /  " + cName;
 
@@ -208,5 +266,7 @@ namespace PaleoPinesDinoStudio.UI.Tabs
             state.Working.LoadFromSpeciesAndSetup(species, setup);
             state.SetStatus("Loaded base: " + (setup.Pattern != null ? setup.Pattern.name : "") + " + " + (setup.Color != null ? setup.Color.name : ""));
         }
+
     }
+    
 }
