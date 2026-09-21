@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c84b3607330861b22dacfe8f2ab1c1993ce6a91e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b46858c5b4a55378c3d802edae7f27116ac5728")]
 [assembly: System.Reflection.AssemblyProductAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PaleoPinesDinoStudio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
